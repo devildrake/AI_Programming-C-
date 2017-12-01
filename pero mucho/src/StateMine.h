@@ -1,10 +1,10 @@
 #pragma once
 #include "State.h"
-class StateHome : public State {
-	
+class StateMine : public State {
+
 public:
-	explicit StateHome();
-	~StateHome()override;
+	explicit StateMine();
+	~StateMine()override;
 	void Enter()override;
 	void Exit()override;
 	void Update()override;

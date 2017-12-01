@@ -7,6 +7,11 @@
 #include "Vector2D.h"
 #include "utils.h"
 #include "SteeringBehavior.h"
+//#include "State.h"
+//#include "StateBank.h"
+//#include "StateHome.h"
+//#include "StateMine.h"
+//#include "StateSaloon.h"
 
 
 class Agent
@@ -31,6 +36,17 @@ private:
 	int sprite_num_frames;
 	int sprite_w;
 	int sprite_h;
+
+	//Cosas Planning
+	int goldPieces=0;
+	const int maxGoldPieces = 0;
+	int energy = 0;
+	const int maxEnergy = 0;
+	int thirst = 0;
+	const int maxThirst = 0;
+	int wealth = 0;
+	const int maxWealth = 0;
+	//State* currentState;
 
 public:
 	Agent();

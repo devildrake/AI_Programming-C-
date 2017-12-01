@@ -1,6 +1,49 @@
 #include "ScenePlanning.h"
+#define NullVector Vector2D{-1-1}
 
 using namespace std;
+
+//Sobrecarga del operador <
+static inline bool operator < (const Vector2D& lhs, const Vector2D& rhs) {
+	bool temp = false;
+	if (lhs.y > rhs.y) {
+		temp = true;
+	}
+
+	else if (lhs.y == rhs.y) {
+		if (lhs.x > rhs.x) {
+			temp = true;
+		}
+	}
+
+	return temp;
+}
+
+static inline bool operator < (const Node& lhs, const Node& rhs) {
+	return lhs.acumulatedCost>rhs.acumulatedCost;
+}
+
+float ScenePlanning::EuclideanHeuristic(Vector2D current, Vector2D target) {
+
+
+	Vector2D currentPixel = cell2pix(current);
+	Vector2D targetPixel = cell2pix(target);
+
+
+	float distanceX = targetPixel.x - currentPixel.x;
+	float distanceY = targetPixel.y - currentPixel.y;
+	float modulusA, modulusB;
+
+	modulusA = sqrtf(distanceX*distanceX + distanceY*distanceY);
+
+	return modulusA;
+}
+
+float ScenePlanning::PlanHeuristic(Vector2D agentPos, Gold gold) {
+	float distance = Vector2D::Distance(agentPos, gold.position);
+	
+	return distance / gold.amount;
+}
 
 ScenePlanning::ScenePlanning()
 {

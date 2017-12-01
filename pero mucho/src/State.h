@@ -9,10 +9,10 @@ private:
 	
 
 public:
-	State();
-	~State();
+	explicit State() = default;
+	virtual ~State() = default;
 
-	virtual void Enter();
-	virtual void Update();
-	virtual void Exit();
+	virtual void Enter() = 0;
+	virtual void Update() = 0;
+	virtual void Exit() = 0;
 };
