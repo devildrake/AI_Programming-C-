@@ -4,6 +4,11 @@
 #include "Scene.h"
 #include "Agent.h"
 #include "Path.h"
+#include "Node.h"
+#include "Graph.h"
+#include "Connection.h"
+#include <queue>
+#include <map>
 
 class ScenePlanning :
 	public Scene
@@ -34,5 +39,15 @@ private:
 	Vector2D cell2pix(Vector2D cell);
 	Vector2D pix2cell(Vector2D pix);
 	bool isValidCell(Vector2D cell);
+	float EuclideanHeuristic(Vector2D, Vector2D);
+	void Astar();
+	void ScenePlanning::ResetVisited();
+	std::vector<Node> nodos;
+	Graph graph;
+	std::priority_queue<Node> frontier;
+	std::map<Vector2D, Vector2D> cameFrom;
+	std::map<Vector2D, Node> mapeado;
+	std::map<Vector2D, float> cost_so_far;
+	bool foundPath;
 
 };

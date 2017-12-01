@@ -1,6 +1,42 @@
+#define NullVector Vector2D{-1-1}
 #include "ScenePlanning.h"
 
 using namespace std;
+
+//Sobrecarga del operador <
+static inline bool operator < (const Vector2D& lhs, const Vector2D& rhs) {
+	bool temp = false;
+	if (lhs.y > rhs.y) {
+		temp = true;
+	}
+
+	else if (lhs.y == rhs.y) {
+		if (lhs.x > rhs.x) {
+			temp = true;
+		}
+	}
+
+	return temp;
+}
+
+static inline bool operator < (const Node& lhs, const Node& rhs) {
+	return lhs.acumulatedCost>rhs.acumulatedCost;
+}
+
+float ScenePlanning::EuclideanHeuristic(Vector2D current, Vector2D target) {
+
+		Vector2D currentPixel = cell2pix(current);
+		Vector2D targetPixel = cell2pix(target);
+
+
+		float distanceX = targetPixel.x - currentPixel.x;
+		float distanceY = targetPixel.y - currentPixel.y;
+		float modulusA;
+
+		modulusA = sqrtf(distanceX*distanceX + distanceY*distanceY);
+
+		return modulusA;
+}
 
 ScenePlanning::ScenePlanning()
 {
@@ -34,6 +70,77 @@ ScenePlanning::ScenePlanning()
 	currentTargetIndex = -1;
 
 }
+
+void ScenePlanning::Astar(){
+	ResetVisited();
+	frontier.push(mapeado[pix2cell(agents[0]->getPosition())]);
+	cameFrom[pix2cell(agents[0]->getPosition())] = NullVector;
+	Vector2D current;
+	Vector2D next;
+	std::vector<Connection>neighbours;
+	int ticksIniciales = SDL_GetTicks();
+	while (!frontier.empty()) {
+		current = frontier.top().coordenates;
+		if (current == (coinPosition)) {
+			cout << "Broke" << endl;
+			break;
+		}
+		neighbours = graph.GetConnections(&nodos[current.x + current.y*num_cell_x]);
+		frontier.pop();
+		for (int i = 0; i < neighbours.size(); i++) {
+
+			next = neighbours[i].GetToNode()->GetCoords();
+
+			float newCost = cost_so_far[current] + neighbours[i].GetCost() + EuclideanHeuristic(next, coinPosition);
+
+			//GETCOORDS ES CELDAS
+			if ((cost_so_far[next] == 0) || (newCost<cost_so_far[next])) {
+				neighbours[i].GetToNode()->acumulatedCost = newCost;
+				cost_so_far[next] = newCost;
+				frontier.push(*neighbours[i].GetToNode());
+				cameFrom[next] = current;
+			}
+		}
+		//frontier.pop();
+
+	}
+	//std::cout << "Calcular el path tarda" << SDL_GetTicks() - ticksIniciales << std::endl;
+
+	//REVERSE PATH
+	current = coinPosition;
+	path.points.push_back(cell2pix(current));
+
+	while (current != pix2cell(agents[0]->getPosition())) {
+		current = cameFrom[current];
+		cout << current.x << " " << current.y << endl;
+		path.points.insert(path.points.begin(), cell2pix(current));
+	}
+	foundPath = true;
+	//ResetVisited();
+
+}
+
+void ScenePlanning::ResetVisited() {
+	for (int j = 0; j < num_cell_y; j++)
+	{
+		for (int i = 0; i < num_cell_x; i++)
+		{
+			cameFrom[Vector2D{ (float)i,(float)j }] = NullVector;
+			cost_so_far[Vector2D{ (float)i,(float)j }] = 0;
+		}
+	}
+
+	for (int i = 0; i < nodos.size(); i++) {
+		nodos[i].acumulatedCost = 0;
+	}
+
+	int frontierSize = frontier.size();
+
+	for (int i = 0; i < frontierSize; i++) {
+		frontier.pop();
+	}
+}
+
 
 ScenePlanning::~ScenePlanning()
 {
@@ -99,8 +206,11 @@ void ScenePlanning::update(float dtime, SDL_Event *event)
 				}
 				else
 				{
-					Vector2D steering_force = agents[0]->Behavior()->Arrive(agents[0], currentTarget, path.ARRIVAL_DISTANCE, dtime);
-					agents[0]->update(steering_force, dtime, event);
+					Vector2D steering_force = agents[0]->Behavior()->Arrive(agents[0], currentTarget, path.ARRIVAL_DISTANCE, dtime);	
+					if (foundPath) {
+						agents[0]->update(steering_force, dtime, event);
+					}
+
 				}
 				return;
 			}
