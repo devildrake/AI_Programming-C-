@@ -33,7 +33,7 @@
     <ClCompile Include="..\src\ScenePlanning.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Node.cpp">
+    <ClCompile Include="..\src\StateHome.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Connection.cpp">
@@ -42,7 +42,7 @@
     <ClCompile Include="..\src\Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StateHome.cpp">
+    <ClCompile Include="..\src\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,13 +71,13 @@
     <ClInclude Include="..\src\ScenePlanning.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Node.h">
+    <ClInclude Include="..\src\Connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Connection.h">
+    <ClInclude Include="..\src\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\State.h">
