@@ -3,10 +3,8 @@
 class StateSaloon : public State {
 	
 public:
-	explicit StateSaloon();
-	~StateSaloon()override;
-	void Enter()override;
-	void Exit()override;
-	void Update()override;
+	virtual void Enter();
+	virtual void Exit();
+	virtual void Update();
 
 };

@@ -3,10 +3,9 @@
 class StateBank : public State {
 
 public:
-	explicit StateBank();
-	~StateBank()override;
-	void Enter()override;
-	void Exit()override;
-	void Update()override;
+
+	virtual void Enter();
+	virtual void Exit();
+	virtual void Update();
 
 };

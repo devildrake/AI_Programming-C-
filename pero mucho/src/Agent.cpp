@@ -17,6 +17,14 @@ Agent::Agent() : sprite_texture(0),
 	             draw_sprite(false)
 {
 	steering_behavior = new SteeringBehavior;
+	state_home = new StateHome();
+	state_saloon = new StateSaloon();
+	state_bank = new StateBank();
+	state_mine = new StateMine();
+	maxEnergyTime = 10;
+	maxThirstTime = 30;
+	energy = 10;
+
 }
 
 Agent::~Agent()
@@ -25,6 +33,32 @@ Agent::~Agent()
 		SDL_DestroyTexture(sprite_texture);
 	if (steering_behavior)
 		delete (steering_behavior);
+}
+
+void Agent::ChangeState(int state) {
+	currentState->Exit();
+	switch (state) {	
+	//HOME
+	case 0:
+		currentState = state_home;
+		break;
+	//MINE
+	case 1:
+		currentState = state_mine;
+		break;
+	//BANK
+	case 2:
+		currentState = state_bank;
+		break;
+	//SALOON
+	case 3:
+		currentState = state_saloon;
+		break;
+	default:
+		
+		break;
+	}
+	currentState->Enter();
 }
 
 SteeringBehavior * Agent::Behavior()
@@ -77,9 +111,29 @@ void Agent::setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	color = { r, g, b, a };
 }
 
+void Agent::UpdateStats(float dtime){
+	timerThirst += dtime;
+	timerEnergy += dtime;
+
+	if (timerThirst >= maxThirstTime) {
+		timerThirst = 0;
+		thirst++;
+	}
+	if (timerEnergy >= maxEnergyTime) {
+		timerEnergy = 0;
+		energy--;
+	}
+
+	cout << thirst << endl;
+}
+
 void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)
 {
+	UpdateStats(dtime);
 
+	if (currentState != nullptr) {
+		currentState->Update();
+	}
 	//cout << "agent update:" << endl;
 
 	switch (event->type) {

@@ -3,10 +3,9 @@
 class StateHome : public State {
 	
 public:
-	explicit StateHome();
-	~StateHome()override;
-	void Enter()override;
-	void Exit()override;
-	void Update()override;
+
+	virtual void Enter();
+	virtual void Exit();
+	virtual void Update();
 
 };

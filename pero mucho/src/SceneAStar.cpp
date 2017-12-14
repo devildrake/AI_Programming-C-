@@ -1,5 +1,5 @@
 #define NullVector Vector2D{-1-1}
-#include "ScenePlanning.h"
+#include "SceneAStar.h"
 
 using namespace std;
 
@@ -23,22 +23,40 @@ static inline bool operator < (const Node& lhs, const Node& rhs) {
 	return lhs.acumulatedCost>rhs.acumulatedCost;
 }
 
-float ScenePlanning::EuclideanHeuristic(Vector2D current, Vector2D target) {
-
-		Vector2D currentPixel = cell2pix(current);
-		Vector2D targetPixel = cell2pix(target);
+float SceneAStar::ManhattanHeuristic(Vector2D current, Vector2D target) {
 
 
-		float distanceX = targetPixel.x - currentPixel.x;
-		float distanceY = targetPixel.y - currentPixel.y;
-		float modulusA, modulusB;
+	Vector2D currentPixel = cell2pix(current);
+	Vector2D targetPixel = cell2pix(target);
 
-		modulusA = sqrtf(distanceX*distanceX + distanceY*distanceY);
 
-		return modulusA;
+	float distanceX = targetPixel.x - currentPixel.x;
+	float distanceY = targetPixel.y - currentPixel.y;
+	float modulusA, modulusB;
+
+	modulusA = sqrtf(distanceX*distanceX + distanceY*distanceY);
+	//cout << distance.x << " - " << distance.y << endl;
+
+	if (currentPixel.x >= (num_cell_x*CELL_SIZE) / 2) {
+		//Mitad derecha
+		distanceX = targetPixel.x + num_cell_x*CELL_SIZE - currentPixel.x;
+
 	}
+	else {
+		//Mitad izquierda
+		distanceX = targetPixel.x - num_cell_x*CELL_SIZE - currentPixel.x;
 
-ScenePlanning::ScenePlanning()
+	}
+	modulusB = sqrtf(distanceX*distanceX + distanceY*distanceY);
+
+
+	if (modulusA > modulusB)
+		return modulusB;
+	else
+		return modulusA;
+}
+
+SceneAStar::SceneAStar()
 {
 	waitAFrame = false;
 	foundPath = false;
@@ -77,7 +95,7 @@ ScenePlanning::ScenePlanning()
 
 }
 
-ScenePlanning::~ScenePlanning()
+SceneAStar::~SceneAStar()
 {
 	if (background_texture)
 		SDL_DestroyTexture(background_texture);
@@ -90,7 +108,7 @@ ScenePlanning::~ScenePlanning()
 	}
 }
 
-void ScenePlanning::update(float dtime, SDL_Event *event)
+void SceneAStar::update(float dtime, SDL_Event *event)
 {
 
 	/* Keyboard & Mouse events */
@@ -111,8 +129,7 @@ void ScenePlanning::update(float dtime, SDL_Event *event)
 						break;
 
 				//path.points.push_back(cell2pix(cell));
-				
-				targetPosition = cell;
+
 			}
 			AStar();
 
@@ -146,7 +163,7 @@ void ScenePlanning::update(float dtime, SDL_Event *event)
 							cout << "coinPos (Coordenadas) " << coinPosition.x << " - " << coinPosition.y << endl;
 						}
 					}
-					//AStar();
+					AStar();
 				}
 				else
 				{
@@ -185,7 +202,7 @@ void ScenePlanning::update(float dtime, SDL_Event *event)
 
 }
 
-void ScenePlanning::AStar() {
+void SceneAStar::AStar() {
 	ResetVisited();
 	frontier.push(mapeado[pix2cell(agents[0]->getPosition())]);
 	cameFrom[pix2cell(agents[0]->getPosition())] = NullVector;
@@ -195,7 +212,7 @@ void ScenePlanning::AStar() {
 	int ticksIniciales = SDL_GetTicks();
 	while (!frontier.empty()) {
 		current = frontier.top().coordenates;
-		if (current == (targetPosition)) {
+		if (current == (coinPosition)) {
 			cout << "Broke" << endl;
 			break;
 		}
@@ -205,7 +222,7 @@ void ScenePlanning::AStar() {
 
 			next = neighbours[i].GetToNode()->GetCoords();
 
-			float newCost = cost_so_far[current] + neighbours[i].GetCost() + EuclideanHeuristic(next, targetPosition);
+			float newCost = cost_so_far[current] + neighbours[i].GetCost() + ManhattanHeuristic(next,coinPosition);
 
 			//GETCOORDS ES CELDAS
 			if ((cost_so_far[next] == 0) || (newCost<cost_so_far[next])) {
@@ -221,7 +238,7 @@ void ScenePlanning::AStar() {
 	//std::cout << "Calcular el path tarda" << SDL_GetTicks() - ticksIniciales << std::endl;
 
 	//REVERSE PATH
-	current = targetPosition;
+	current = coinPosition;
 	path.points.push_back(cell2pix(current));
 
 	while (current != pix2cell(agents[0]->getPosition())) {
@@ -234,7 +251,7 @@ void ScenePlanning::AStar() {
 
 }
 
-void ScenePlanning::draw()
+void SceneAStar::draw()
 {
 	SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 255, 0, 127);
 
@@ -272,12 +289,12 @@ void ScenePlanning::draw()
 	agents[0]->draw();
 }
 
-const char* ScenePlanning::getTitle()
+const char* SceneAStar::getTitle()
 {
-	return "SDL Steering Behaviors :: ScenePlanning";
+	return "SDL Steering Behaviors :: SceneAStar";
 }
 
-void ScenePlanning::drawMaze()
+void SceneAStar::drawMaze()
 {
 	if (draw_grid)
 	{
@@ -291,16 +308,16 @@ void ScenePlanning::drawMaze()
 		SDL_RenderCopy(TheApp::Instance()->getRenderer(), background_texture, NULL, NULL);
 	}
 
-	for (int j = 0; j < nodos.size(); j++) {
-		if (nodos[j].cost>500)
-			draw_circle(TheApp::Instance()->getRenderer(), cell2pix(nodos[j].GetCoords()).x, cell2pix(nodos[j].GetCoords()).y, 15, 0, 0, 255, 255);
+	for (int j = 0; j < nodos.size(); j++){
+		if(nodos[j].cost>500)
+					draw_circle(TheApp::Instance()->getRenderer(), cell2pix(nodos[j].GetCoords()).x, cell2pix(nodos[j].GetCoords()).y, 15, 0, 0, 255, 255);
 
 	}
 
 
 }
 
-void ScenePlanning::drawCoin()
+void SceneAStar::drawCoin()
 {
 	Vector2D coin_coords = cell2pix(coinPosition);
 	int offset = CELL_SIZE / 2;
@@ -308,34 +325,77 @@ void ScenePlanning::drawCoin()
 	SDL_RenderCopy(TheApp::Instance()->getRenderer(), coin_texture, NULL, &dstrect);
 }
 
-void ScenePlanning::initMaze()
+void SceneAStar::initMaze()
 {
 
 	// Initialize a list of Rectagles describing the maze geometry (useful for collision avoidance)
 	SDL_Rect rect = { 0, 0, 1280, 32 };
 	maze_rects.push_back(rect);
-	rect = { 128, 160, 1152, 32 };
+	rect = { 608, 32, 64, 32 };
 	maze_rects.push_back(rect);
 	rect = { 0, 736, 1280, 32 };
 	maze_rects.push_back(rect);
-
-	rect = { 0,32,32,736 };
+	rect = { 608, 512, 64, 224 };
 	maze_rects.push_back(rect);
-	rect = { 1248,32,32,736 };
+	rect = { 0,32,32,288 };
 	maze_rects.push_back(rect);
-
-	rect = { 416,512,32,268 };
+	rect = { 0,416,32,320 };
 	maze_rects.push_back(rect);
-	rect = { 832,512,32,268 };
+	rect = { 1248,32,32,288 };
 	maze_rects.push_back(rect);
-
-	rect = { 32,480,128,32 };
+	rect = { 1248,416,32,320 };
 	maze_rects.push_back(rect);
-	rect = { 288,480,288,32 };
+	rect = { 128,128,64,32 };
 	maze_rects.push_back(rect);
-	rect = { 704,480,288,32 };
+	rect = { 288,128,96,32 };
 	maze_rects.push_back(rect);
-	rect = { 1120,480,128,32 };
+	rect = { 480,128,64,32 };
+	maze_rects.push_back(rect);
+	rect = { 736,128,64,32 };
+	maze_rects.push_back(rect);
+	rect = { 896,128,96,32 };
+	maze_rects.push_back(rect);
+	rect = { 1088,128,64,32 };
+	maze_rects.push_back(rect);
+	rect = { 128,256,64,32 };
+	maze_rects.push_back(rect);
+	rect = { 288,256,96,32 };
+	maze_rects.push_back(rect);
+	rect = { 480, 256, 320, 32 };
+	maze_rects.push_back(rect);
+	rect = { 608, 224, 64, 32 };
+	maze_rects.push_back(rect);
+	rect = { 896,256,96,32 };
+	maze_rects.push_back(rect);
+	rect = { 1088,256,64,32 };
+	maze_rects.push_back(rect);
+	rect = { 128,384,32,256 };
+	maze_rects.push_back(rect);
+	rect = { 160,512,352,32 };
+	maze_rects.push_back(rect);
+	rect = { 1120,384,32,256 };
+	maze_rects.push_back(rect);
+	rect = { 768,512,352,32 };
+	maze_rects.push_back(rect);
+	rect = { 256,640,32,96 };
+	maze_rects.push_back(rect);
+	rect = { 992,640,32,96 };
+	maze_rects.push_back(rect);
+	rect = { 384,544,32,96 };
+	maze_rects.push_back(rect);
+	rect = { 480,704,32,32 };
+	maze_rects.push_back(rect);
+	rect = { 768,704,32,32 };
+	maze_rects.push_back(rect);
+	rect = { 864,544,32,96 };
+	maze_rects.push_back(rect);
+	rect = { 320,288,32,128 };
+	maze_rects.push_back(rect);
+	rect = { 352,384,224,32 };
+	maze_rects.push_back(rect);
+	rect = { 704,384,224,32 };
+	maze_rects.push_back(rect);
+	rect = { 928,288,32,128 };
 	maze_rects.push_back(rect);
 
 	// Initialize the terrain matrix (for each cell a zero value indicates it's a wall)
@@ -360,11 +420,11 @@ void ScenePlanning::initMaze()
 					terrain[i][j] = 0;
 					break;
 				}
+
 			}
 
 		}
 	}
-
 
 	for (int j = 0; j < num_cell_y; j++)
 	{
@@ -375,6 +435,12 @@ void ScenePlanning::initMaze()
 			tmp.SetObstacle(!terrain[i][j]);
 			tmp.SetCoords(Vector2D{ (float)i,(float)j });
 
+
+			if ( i==18||i == 19 || i == 20 ){
+				if (j == 10 || j == 11 || j == 12 || j == 13 || j==9 || j==14 || j==15) {
+					tmp.cost = tmp.waterNodeWeight;
+				}
+			}else
 			tmp.cost = tmp.groundNodeWeight;
 
 
@@ -388,21 +454,54 @@ void ScenePlanning::initMaze()
 
 	for (int i = num_cell_x; i < (nodos.size() - num_cell_x); i++) {
 		if (!nodos[i].IsObstacle()) {
-			if (!nodos[i - 1].IsObstacle()) {
-				graph.connections.push_back(Connection(nodos[i], nodos[i - 1]));
-				//std::cout << Connection(nodos[i], nodos[i - 1]).GetFromNode()->GetCoords().x<<std::endl;
-			}if (!nodos[i + 1].IsObstacle()) {
-				graph.connections.push_back(Connection(nodos[i], nodos[i + 1]));
-			}if (!nodos[i - num_cell_x].IsObstacle()) {
-				graph.connections.push_back(Connection(nodos[i], nodos[i - num_cell_x]));
-			}if (!nodos[i + num_cell_x].IsObstacle()) {
-				graph.connections.push_back(Connection(nodos[i], nodos[i + num_cell_x]));
+			if (i != num_cell_x * 10 && i != num_cell_x * 11 && i != num_cell_x * 12 && i != num_cell_x * 10 + num_cell_x - 1 && i != num_cell_x * 11 + num_cell_x - 1 && i != num_cell_x * 12 + num_cell_x - 1) {
+				if (!nodos[i - 1].IsObstacle()) {
+					graph.connections.push_back(Connection(nodos[i], nodos[i - 1]));
+					//std::cout << Connection(nodos[i], nodos[i - 1]).GetFromNode()->GetCoords().x<<std::endl;
+				}if (!nodos[i + 1].IsObstacle()) {
+					graph.connections.push_back(Connection(nodos[i], nodos[i + 1]));
+				}if (!nodos[i - num_cell_x].IsObstacle()) {
+					graph.connections.push_back(Connection(nodos[i], nodos[i - num_cell_x]));
+				}if (!nodos[i + num_cell_x].IsObstacle()) {
+					graph.connections.push_back(Connection(nodos[i], nodos[i + num_cell_x]));
+				}
 			}
 		}
 	}
+	//LAS DE LA IZQUIERDA------------------------------------------------------------------------------------------
+
+	graph.connections.push_back(Connection(nodos[num_cell_x * 10], nodos[num_cell_x * 11]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 10], nodos[num_cell_x * 10 + 1]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 10], nodos[num_cell_x * 10 + num_cell_x - 1]));
+
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11], nodos[num_cell_x * 12]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11], nodos[num_cell_x * 11 + 1]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11], nodos[num_cell_x * 11 + num_cell_x - 1]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11], nodos[num_cell_x * 10]));
+
+	graph.connections.push_back(Connection(nodos[num_cell_x * 12], nodos[num_cell_x * 11]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 12], nodos[num_cell_x * 12 + 1]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 12], nodos[num_cell_x * 12 + num_cell_x - 1]));
+
+	//LAS DE LA DERECHA------------------------------------------------------------------------------------------
+
+	graph.connections.push_back(Connection(nodos[num_cell_x * 10 + num_cell_x - 1], nodos[num_cell_x * 11 + num_cell_x - 1]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 10 + num_cell_x - 1], nodos[num_cell_x * 10 + num_cell_x - 2]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 10 + num_cell_x - 1], nodos[num_cell_x * 10]));
+
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11 + num_cell_x - 1], nodos[num_cell_x * 12 + num_cell_x - 1]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11 + num_cell_x - 1], nodos[num_cell_x * 11 + num_cell_x - 2]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11 + num_cell_x - 1], nodos[num_cell_x * 11]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 11 + num_cell_x - 1], nodos[num_cell_x * 10 + num_cell_x - 1]));
+
+	graph.connections.push_back(Connection(nodos[num_cell_x * 12 + num_cell_x - 1], nodos[num_cell_x * 12 + num_cell_x - 2]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 12 + num_cell_x - 1], nodos[num_cell_x * 12]));
+	graph.connections.push_back(Connection(nodos[num_cell_x * 12 + num_cell_x - 1], nodos[num_cell_x * 11 + num_cell_x - 1]));
+
 
 }
-void ScenePlanning::ResetVisited() {
+
+void SceneAStar::ResetVisited() {
 	for (int j = 0; j < num_cell_y; j++)
 	{
 		for (int i = 0; i < num_cell_x; i++)
@@ -423,7 +522,7 @@ void ScenePlanning::ResetVisited() {
 	}
 }
 
-bool ScenePlanning::loadTextures(char* filename_bg, char* filename_coin)
+bool SceneAStar::loadTextures(char* filename_bg, char* filename_coin)
 {
 	SDL_Surface *image = IMG_Load(filename_bg);
 	if (!image) {
@@ -448,18 +547,18 @@ bool ScenePlanning::loadTextures(char* filename_bg, char* filename_coin)
 	return true;
 }
 
-Vector2D ScenePlanning::cell2pix(Vector2D cell)
+Vector2D SceneAStar::cell2pix(Vector2D cell)
 {
 	int offset = CELL_SIZE / 2;
 	return Vector2D(cell.x*CELL_SIZE + offset, cell.y*CELL_SIZE + offset);
 }
 
-Vector2D ScenePlanning::pix2cell(Vector2D pix)
+Vector2D SceneAStar::pix2cell(Vector2D pix)
 {
 	return Vector2D((float)((int)pix.x / CELL_SIZE), (float)((int)pix.y / CELL_SIZE));
 }
 
-bool ScenePlanning::isValidCell(Vector2D cell)
+bool SceneAStar::isValidCell(Vector2D cell)
 {
 	if ((cell.x < 0) || (cell.y < 0) || (cell.x >= terrain.size()) || (cell.y >= terrain[0].size()))
 		return false;

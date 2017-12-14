@@ -1,12 +1,6 @@
 #include "StateSaloon.h"
 
-StateSaloon::StateSaloon() {
 
-}
-
-StateSaloon::~StateSaloon() {
-
-}
 
 
 void StateSaloon::Enter() {

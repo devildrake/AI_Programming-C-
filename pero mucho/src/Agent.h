@@ -8,10 +8,10 @@
 #include "utils.h"
 #include "SteeringBehavior.h"
 //#include "State.h"
-//#include "StateBank.h"
-//#include "StateHome.h"
-//#include "StateMine.h"
-//#include "StateSaloon.h"
+#include "StateBank.h"
+#include "StateHome.h"
+#include "StateMine.h"
+#include "StateSaloon.h"
 
 
 class Agent
@@ -39,14 +39,14 @@ private:
 
 	//Cosas Planning
 	int goldPieces=0;
-	const int maxGoldPieces = 0;
+	const int maxGoldPieces = 5;
 	int energy = 0;
-	const int maxEnergy = 0;
+	const int maxEnergy = 10;
 	int thirst = 0;
-	const int maxThirst = 0;
-	int wealth = 0;
-	const int maxWealth = 0;
-	//State* currentState;
+	const int maxThirst = 10;
+	int coinsInBank = 0;
+	int wealthThreshold = 100;
+	State* currentState;
 
 public:
 	Agent();
@@ -56,6 +56,10 @@ public:
 	Vector2D getTarget();
 	Vector2D getVelocity();
 	float getMaxVelocity();
+	float timerThirst;
+	float maxThirstTime;
+	float timerEnergy;
+	float maxEnergyTime;
 	void setPosition(Vector2D position);
 	void setTarget(Vector2D target);
 	void setVelocity(Vector2D velocity);
@@ -64,5 +68,10 @@ public:
 	void update(Vector2D steering_force, float dtime, SDL_Event *event);
 	void draw();
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
-	
+	void ChangeState(int state);
+	void UpdateStats(float );
+	State* state_home;
+	State* state_saloon;
+	State* state_bank;
+	State* state_mine;
 };

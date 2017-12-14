@@ -1,14 +1,5 @@
 #include "StateBank.h"
 
-StateBank::StateBank() {
-
-}
-
-StateBank::~StateBank() {
-
-}
-
-
 void StateBank::Enter() {
 
 }

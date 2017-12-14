@@ -3,10 +3,8 @@
 class StateMine : public State {
 
 public:
-	explicit StateMine();
-	~StateMine()override;
-	void Enter()override;
-	void Exit()override;
-	void Update()override;
 
+	virtual void Enter();
+	virtual void Exit();
+	virtual void Update();
 };

@@ -7,14 +7,13 @@
 #include "Graph.h"
 #include <queue>
 #include <map>
-#include "Gold.h"
 
-class ScenePlanning :
+class SceneAStar :
 	public Scene
 {
 public:
-	ScenePlanning();
-	~ScenePlanning();
+	SceneAStar();
+	~SceneAStar();
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();
@@ -24,10 +23,8 @@ private:
 
 	std::vector<Agent*> agents;
 	Vector2D coinPosition;
-	Vector2D targetPosition;
 	Vector2D currentTarget;
 	int currentTargetIndex;
-	Vector2D target;
 	Path path;
 	int num_cell_x;
 	int num_cell_y;
@@ -55,6 +52,5 @@ private:
 	std::map<Vector2D, float> cost_so_far;
 	void AStar();
 	void ResetVisited();
-	float EuclideanHeuristic(Vector2D, Vector2D);
-	float PlanHeuristic(Vector2D, Gold);
+	float SceneAStar::ManhattanHeuristic(Vector2D current, Vector2D target);
 };

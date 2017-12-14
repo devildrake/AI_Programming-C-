@@ -66,7 +66,7 @@
     <ClCompile Include="..\src\Gold.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StateWalking.cpp">
+    <ClCompile Include="..\src\SceneAStar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,7 +131,7 @@
     <ClInclude Include="..\src\Gold.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\StateWalking.h">
+    <ClInclude Include="..\src\SceneAStar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
