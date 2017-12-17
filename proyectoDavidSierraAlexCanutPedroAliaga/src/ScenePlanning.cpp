@@ -60,7 +60,8 @@ ScenePlanning::ScenePlanning()
 	Vector2D rand_cell(-1, -1);
 	while (!isValidCell(rand_cell))
 		rand_cell = Vector2D((float)(rand() % num_cell_x), (float)(rand() % num_cell_y));
-	agents[0]->setPosition(cell2pix(rand_cell));
+	agents[0]->setPosition(cell2pix(agents[0]->houseCoords));
+	//agents[0]->setPosition(cell2pix(Vector2D(15,30)));
 
 	// set the coin in a random cell (but at least 3 cells far from the agent)
 	coinPosition = Vector2D(-1, -1);
@@ -113,6 +114,7 @@ void ScenePlanning::update(float dtime, SDL_Event *event)
 				//path.points.push_back(cell2pix(cell));
 				
 				targetPosition = cell;
+				cout << "Clicked at " << cell.x << " , " << cell.y << endl;
 			}
 			AStar();
 
@@ -196,7 +198,7 @@ void ScenePlanning::AStar() {
 	while (!frontier.empty()) {
 		current = frontier.top().coordenates;
 		if (current == (targetPosition)) {
-			cout << "Broke" << endl;
+			//cout << "Broke" << endl;
 			break;
 		}
 		neighbours = graph.GetConnections(&nodos[current.x + current.y*num_cell_x]);
@@ -226,7 +228,7 @@ void ScenePlanning::AStar() {
 
 	while (current != pix2cell(agents[0]->getPosition())) {
 		current = cameFrom[current];
-		cout << current.x << " " << current.y << endl;
+		//cout << current.x << " " << current.y << endl;
 		path.points.insert(path.points.begin(), cell2pix(current));
 	}
 	foundPath = true;

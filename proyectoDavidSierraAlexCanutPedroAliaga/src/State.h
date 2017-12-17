@@ -1,7 +1,6 @@
 #pragma once
-#include "Node.h"
-#include "Connection.h"
-#include "Graph.h"
+#include "Agent.h"
+class Agent;
 
 class State{
 private:

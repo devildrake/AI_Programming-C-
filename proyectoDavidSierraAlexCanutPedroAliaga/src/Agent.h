@@ -7,12 +7,9 @@
 #include "Vector2D.h"
 #include "utils.h"
 #include "SteeringBehavior.h"
-//#include "State.h"
-#include "StateBank.h"
-#include "StateHome.h"
-#include "StateMine.h"
-#include "StateSaloon.h"
+#include "State.h"
 
+class State;
 
 class Agent
 {
@@ -55,6 +52,7 @@ public:
 	Vector2D getPosition();
 	Vector2D getTarget();
 	Vector2D getVelocity();
+	Vector2D mineEntranceCoords, houseCoords, saloonCoords, bankCoords;
 	float getMaxVelocity();
 	float timerThirst;
 	float maxThirstTime;
@@ -68,6 +66,7 @@ public:
 	void update(Vector2D steering_force, float dtime, SDL_Event *event);
 	void draw();
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
+	bool arrived;
 	void ChangeState(int state);
 	void UpdateStats(float );
 	State* state_home;

@@ -17,13 +17,19 @@ Agent::Agent() : sprite_texture(0),
 	             draw_sprite(false)
 {
 	steering_behavior = new SteeringBehavior;
-	state_home = new StateHome();
-	state_saloon = new StateSaloon();
-	state_bank = new StateBank();
-	state_mine = new StateMine();
+	//state_home = new StateHome();
+	//state_saloon = new StateSaloon();
+	//state_bank = new StateBank();
+	//state_mine = new StateMine();
 	maxEnergyTime = 10;
 	maxThirstTime = 30;
+	arrived = true;
 	energy = 10;
+	mineEntranceCoords = Vector2D(2, 4);
+	bankCoords = Vector2D(7, 19);
+	houseCoords= Vector2D(20, 19);
+	saloonCoords= Vector2D(34, 19);
+
 
 }
 
@@ -124,7 +130,7 @@ void Agent::UpdateStats(float dtime){
 		energy--;
 	}
 
-	cout << thirst << endl;
+	//cout << thirst << endl;
 }
 
 void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)
