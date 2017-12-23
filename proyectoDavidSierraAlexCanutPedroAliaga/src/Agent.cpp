@@ -1,5 +1,8 @@
 #include "Agent.h"
-
+#include "StateBank.h"
+#include "StateHome.h"
+#include "StateMine.h"
+#include "StateSaloon.h"
 using namespace std;
 
 Agent::Agent() : sprite_texture(0),
@@ -17,10 +20,10 @@ Agent::Agent() : sprite_texture(0),
 	             draw_sprite(false)
 {
 	steering_behavior = new SteeringBehavior;
-	//state_home = new StateHome();
-	//state_saloon = new StateSaloon();
-	//state_bank = new StateBank();
-	//state_mine = new StateMine();
+	state_home = new StateHome();
+	state_saloon = new StateSaloon();
+	state_bank = new StateBank();
+	state_mine = new StateMine();
 	maxEnergyTime = 10;
 	maxThirstTime = 30;
 	arrived = true;
