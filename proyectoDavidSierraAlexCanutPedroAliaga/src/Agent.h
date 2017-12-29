@@ -7,6 +7,7 @@
 #include "Vector2D.h"
 #include "utils.h"
 #include "SteeringBehavior.h"
+#include "Gold.h"
 
 
 class State;
@@ -45,6 +46,7 @@ private:
 	int wealthThreshold = 100;
 	State* currentState;
 	Vector2D destiny;
+	Gold* currentGoldPiece;
 
 public:
 	Agent();
@@ -53,7 +55,7 @@ public:
 	Vector2D getPosition();
 	Vector2D getTarget();
 	Vector2D getVelocity();
-	Vector2D mineEntranceCoords, houseCoords, saloonCoords, bankCoords;
+	Vector2D houseCoords;// mineEntranceCoords, saloonCoords, bankCoords;
 	float getMaxVelocity();
 	float timerThirst;
 	float maxThirstTime;
@@ -92,4 +94,7 @@ public:
 	void SetDestiny(Vector2D);
 	Vector2D GetDestiny();
 	void Think(float);
+	void SetCurrentGoldPiece(Gold*);
+	Gold* GetCurrentGoldPiece();
+
 };

@@ -20,7 +20,6 @@ public:
 
 
 private:
-
 	std::vector<Agent*> agents;
 	Vector2D coinPosition;
 	Vector2D currentTarget;

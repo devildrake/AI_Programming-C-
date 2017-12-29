@@ -28,10 +28,10 @@ Agent::Agent() : sprite_texture(0),
 	maxThirstTime = 30;
 	arrived = true;
 	energy = 10;
-	mineEntranceCoords = Vector2D(2, 4);
-	bankCoords = Vector2D(7, 19);
+	//mineEntranceCoords = Vector2D(2, 4);
+	//bankCoords = Vector2D(7, 19);
 	houseCoords= Vector2D(20, 19);
-	saloonCoords= Vector2D(34, 19);
+	//saloonCoords= Vector2D(34, 19);
 
 
 }
@@ -42,6 +42,14 @@ Agent::~Agent()
 		SDL_DestroyTexture(sprite_texture);
 	if (steering_behavior)
 		delete (steering_behavior);
+}
+
+void Agent::SetCurrentGoldPiece(Gold* gold) {
+	currentGoldPiece = gold;
+}
+
+Gold* Agent::GetCurrentGoldPiece() {
+	return currentGoldPiece;
 }
 
 void Agent::ChangeState(int state) {
@@ -151,7 +159,7 @@ void Agent::Think(float dtime) {
 	//UpdateStats(dtime);
 	if (currentState != nullptr) {
 		//std::cout << "Llama al update" << std::endl;
-		currentState->Update();
+		currentState->Update(dtime);
 	}
 	else {
 		//cout << "agent update:" << endl;

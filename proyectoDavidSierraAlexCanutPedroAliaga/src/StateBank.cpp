@@ -11,7 +11,17 @@ void StateBank::Exit() {
 }
 
 void StateBank::Update(float dtime) {
+	if (agent->arrived) {
+		agent->SetCoinsInBank(agent->GetGoldPieces() + agent->GetCoinsInBank());
+		agent->SetGoldPieces(0);
+		if (agent->GetCoinsInBank() < agent->GetWealthThreshold()) {
+			agent->ChangeState(1);
+		}
+		else {
+			agent->ChangeState(0);
+		}
 
+	}
 }
 
 StateBank::StateBank(Agent* agent,Vector2D entrance) {

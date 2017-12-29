@@ -23,7 +23,8 @@ public:
 private:
 
 	std::vector<Agent*> agents;
-	Vector2D coinPosition;
+	std::vector<Gold>goldPieces;
+	//Vector2D coinPosition;
 	Vector2D targetPosition;
 	Vector2D currentTarget;
 	int currentTargetIndex;
@@ -57,4 +58,5 @@ private:
 	void ResetVisited();
 	float EuclideanHeuristic(Vector2D, Vector2D);
 	float PlanHeuristic(Vector2D, Gold);
+	void GoldHeuristic();
 };
