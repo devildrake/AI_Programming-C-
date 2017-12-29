@@ -44,6 +44,7 @@ private:
 	int coinsInBank = 0;
 	int wealthThreshold = 100;
 	State* currentState;
+	Vector2D destiny;
 
 public:
 	Agent();
@@ -68,9 +69,27 @@ public:
 	bool Agent::loadSpriteTexture(char* filename, int num_frames=1);
 	bool arrived;
 	void ChangeState(int state);
-	void UpdateStats(float );
+	//void UpdateStats(float );
 	State* state_home;
 	State* state_saloon;
 	State* state_bank;
 	State* state_mine;
+
+	int GetMaxThirst();
+	int GetThirst();
+	int GetEnergy();
+	int GetMaxEnergy();
+	int GetCoinsInBank();
+	int GetWealthThreshold();
+	int GetGoldPieces();
+	int GetMaxGoldPieces();
+	State* GetCurrentState();
+	void SetThirst(int);
+	void SetEnergy(int);
+	void SetCoinsInBank(int);
+	void SetWealthThreshold(int);
+	void SetGoldPieces(int);
+	void SetDestiny(Vector2D);
+	Vector2D GetDestiny();
+	void Think(float);
 };

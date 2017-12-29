@@ -8,5 +8,6 @@ public:
 
 	virtual void Enter();
 	virtual void Exit();
-	virtual void Update();
+	virtual void Update(float );
+	StateMine(Agent*, Vector2D);
 };

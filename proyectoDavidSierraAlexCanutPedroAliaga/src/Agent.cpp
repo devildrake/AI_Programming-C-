@@ -20,10 +20,10 @@ Agent::Agent() : sprite_texture(0),
 	             draw_sprite(false)
 {
 	steering_behavior = new SteeringBehavior;
-	state_home = new StateHome();
-	state_saloon = new StateSaloon();
-	state_bank = new StateBank();
-	state_mine = new StateMine();
+	state_home = new StateHome(this,Vector2D(20,19));
+	state_saloon = new StateSaloon(this, Vector2D(33, 19));
+	state_bank = new StateBank(this, Vector2D(7, 19));
+	state_mine = new StateMine(this, Vector2D(3, 3));
 	maxEnergyTime = 10;
 	maxThirstTime = 30;
 	arrived = true;
@@ -45,23 +45,34 @@ Agent::~Agent()
 }
 
 void Agent::ChangeState(int state) {
+	std::cout << "Se llama a ChangeState" << std::endl;
+	if(currentState!=nullptr)
 	currentState->Exit();
+
 	switch (state) {	
 	//HOME
 	case 0:
 		currentState = state_home;
+		std::cout << "home" << std::endl;
+
 		break;
 	//MINE
 	case 1:
 		currentState = state_mine;
+		std::cout << "mine" << std::endl;
+
 		break;
 	//BANK
 	case 2:
 		currentState = state_bank;
+		std::cout << "bank" << std::endl;
+
 		break;
 	//SALOON
 	case 3:
 		currentState = state_saloon;
+		std::cout << "saloon" << std::endl;
+
 		break;
 	default:
 		
@@ -120,29 +131,36 @@ void Agent::setColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 	color = { r, g, b, a };
 }
 
-void Agent::UpdateStats(float dtime){
-	timerThirst += dtime;
-	timerEnergy += dtime;
+//void Agent::UpdateStats(float dtime){
+//	timerThirst += dtime;
+//	timerEnergy += dtime;
+//
+//	if (timerThirst >= maxThirstTime) {
+//		timerThirst = 0;
+//		thirst++;
+//	}
+//	if (timerEnergy >= maxEnergyTime) {
+//		timerEnergy = 0;
+//		energy--;
+//	}
+//
+//	//cout << thirst << endl;
+//}
 
-	if (timerThirst >= maxThirstTime) {
-		timerThirst = 0;
-		thirst++;
+void Agent::Think(float dtime) {
+	//UpdateStats(dtime);
+	if (currentState != nullptr) {
+		//std::cout << "Llama al update" << std::endl;
+		currentState->Update();
 	}
-	if (timerEnergy >= maxEnergyTime) {
-		timerEnergy = 0;
-		energy--;
-	}
+	else {
+		//cout << "agent update:" << endl;
 
-	//cout << thirst << endl;
+	}
 }
 
 void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)
 {
-	UpdateStats(dtime);
-
-	if (currentState != nullptr) {
-		currentState->Update();
-	}
 	//cout << "agent update:" << endl;
 
 	switch (event->type) {
@@ -173,6 +191,8 @@ void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)
 	if (position.y < 0) position.y = TheApp::Instance()->getWinSize().y;
 	if (position.x > TheApp::Instance()->getWinSize().x) position.x = 0;
 	if (position.y > TheApp::Instance()->getWinSize().y) position.y = 0;
+
+
 }
 
 void Agent::draw()
@@ -218,4 +238,59 @@ bool Agent::loadSpriteTexture(char* filename, int _num_frames)
 		SDL_FreeSurface(image);
 
 	return true;
+}
+
+int Agent::GetMaxThirst() {
+	return maxThirst;
+}
+int Agent::GetThirst() {
+	return thirst;
+}
+
+int Agent::GetEnergy() {
+	return energy;
+}
+int Agent::GetMaxEnergy() {
+	return maxEnergy;
+}
+int Agent::GetCoinsInBank() {
+	return coinsInBank;
+}
+int Agent::GetWealthThreshold() {
+	return wealthThreshold;
+}
+int Agent::GetGoldPieces() {
+	return goldPieces;
+}
+int Agent::GetMaxGoldPieces() {
+	return maxGoldPieces;
+}
+
+State* Agent::GetCurrentState() {
+	return currentState;
+}
+
+void Agent::SetThirst(int a) {
+	thirst = a;
+}
+void Agent::SetEnergy(int a) {
+	energy = a;
+}
+
+void Agent::SetCoinsInBank(int a) {
+	coinsInBank = a;
+}
+void Agent::SetWealthThreshold(int a) {
+	wealthThreshold = a;
+}
+void Agent::SetGoldPieces(int a) {
+	goldPieces = a;
+}
+
+void Agent::SetDestiny(Vector2D a) {
+	destiny = a;
+}
+
+Vector2D Agent::GetDestiny() {
+	return destiny;
 }

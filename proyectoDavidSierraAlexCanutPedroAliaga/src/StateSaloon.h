@@ -6,6 +6,6 @@ class StateSaloon : public State {
 public:
 	virtual void Enter();
 	virtual void Exit();
-	virtual void Update();
-
+	virtual void Update(float);
+	StateSaloon(Agent*, Vector2D);
 };
