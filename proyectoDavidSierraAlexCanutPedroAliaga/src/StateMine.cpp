@@ -14,7 +14,11 @@ void StateMine::Exit() {
 }
 
 void StateMine::Update(float dtime) {
-	
+	if (agent->GetCurrentGoldPiece ()!= nullptr) {
+		if (agent->getPosition() == agent->GetCurrentGoldPiece()->position) {
+			//agent->GetCurrentGoldPiece()->mined=true;
+		}
+	}
 }
 
 StateMine::StateMine(Agent* agent,Vector2D entrance) {

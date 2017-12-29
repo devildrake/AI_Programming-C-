@@ -6,8 +6,8 @@ private:
 public:
 	int amount;
 	Vector2D position;
-
-	Gold(int, Vector2D);
+	bool mined;
+	Gold(Vector2D);
 	
 
 };
