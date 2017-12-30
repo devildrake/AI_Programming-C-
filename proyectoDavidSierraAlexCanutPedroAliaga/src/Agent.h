@@ -99,5 +99,5 @@ public:
 	Gold* GetCurrentGoldPiece();
 	void SetFoundGold(bool);
 	bool GetFoundGold();
-
+	void DebugStats();
 };

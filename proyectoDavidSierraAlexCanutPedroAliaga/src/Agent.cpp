@@ -28,6 +28,7 @@ Agent::Agent() : sprite_texture(0),
 	maxThirstTime = 30;
 	arrived = true;
 	energy = 10;
+	coinsInBank = 90;
 	//mineEntranceCoords = Vector2D(2, 4);
 	//bankCoords = Vector2D(7, 19);
 	houseCoords= Vector2D(20, 19);
@@ -52,8 +53,22 @@ Gold* Agent::GetCurrentGoldPiece() {
 	return currentGoldPiece;
 }
 
+void Agent::DebugStats() {
+	std::cout << "Gold In Bank: " << coinsInBank << endl;
+	std::cout << "Gold in pockets: " << goldPieces << endl;
+	std::cout << "Energy: " << energy << endl;
+	std::cout << "Thirst: " << thirst << endl;
+	std::cout << "Wealthy when: " << wealthThreshold << endl;
+
+}
+
 void Agent::ChangeState(int state) {
-	std::cout << "Se llama a ChangeState" << std::endl;
+	DebugStats();
+	//std::cout << "Se llama a ChangeState" << std::endl;
+
+
+
+
 	if(currentState!=nullptr)
 	currentState->Exit();
 
@@ -169,7 +184,7 @@ void Agent::Think(float dtime) {
 
 void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)
 {
-	//cout << "agent update:" << endl;
+	//Ccout << "agent update:" << endl;
 
 	switch (event->type) {
 		/* Keyboard & Mouse events */

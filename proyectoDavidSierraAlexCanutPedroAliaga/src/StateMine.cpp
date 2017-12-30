@@ -26,17 +26,44 @@ Vector2D pix2cell(Vector2D pix)
 
 void StateMine::Update(float dtime) {
 
-	if (agent->GetCurrentGoldPiece ()!= nullptr) {
+	agent->timerThirst += dtime;
+	agent->timerEnergy += dtime;
 
-		if ((pix2cell(agent->getPosition())) == agent->GetCurrentGoldPiece()->position) {
-			agent->GetCurrentGoldPiece()->mined=true;
-			agent->SetGoldPieces(agent->GetGoldPieces() + agent->GetCurrentGoldPiece()->amount);
-			std::cout << "Llego al oro" << std::endl;
-		}
-		else {
-			
-		}
+	if (agent->timerThirst >= agent->maxThirstTime) {
+		agent->timerThirst = 0;
+		agent->SetThirst(agent->GetThirst() + 1);
 	}
+	if (agent->timerEnergy >= agent->maxEnergyTime) {
+		agent->timerEnergy = 0;
+		agent->SetEnergy(agent->GetEnergy() - 1);
+	}
+
+	if (agent->arrived) {
+		if (agent->GetCurrentGoldPiece() != nullptr) {
+
+			if ((pix2cell(agent->getPosition())) == agent->GetCurrentGoldPiece()->position) {
+				agent->GetCurrentGoldPiece()->mined = true;
+				agent->SetGoldPieces(agent->GetGoldPieces() + agent->GetCurrentGoldPiece()->amount);
+				//std::cout << "Llego al oro" << std::endl;
+			}
+			else {
+
+			}
+		}
+
+
+		
+
+		if (agent->GetGoldPieces() > agent->GetMaxGoldPieces()) {
+			agent->ChangeState(2);
+		}
+
+		if (agent->GetThirst() > agent->GetMaxThirst()) {
+			agent->ChangeState(3);
+		}
+	
+	}
+
 }
 
 StateMine::StateMine(Agent* agent,Vector2D entrance) {

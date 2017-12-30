@@ -80,7 +80,7 @@ ScenePlanning::ScenePlanning()
 
 		if (isValidCell(goldPosition)) {
 			goldPieces.push_back(new Gold(goldPosition));
-			cout << "goldPos (Coordenadas) " << goldPosition.x << " - " << goldPosition.y << endl;
+			//cout << "goldPos (Coordenadas) " << goldPosition.x << " - " << goldPosition.y << endl;
 			terrain[goldPosition.x][goldPosition.y] = 0;
 		}
 	}
@@ -301,7 +301,7 @@ void ScenePlanning::AStar() {
 }
 
 void ScenePlanning::GoldHeuristic() {
-	cout << "GoldHeuristic" << endl;
+	//cout << "GoldHeuristic" << endl;
 
 	Gold* 		goldToMine = goldPieces[0];
 
