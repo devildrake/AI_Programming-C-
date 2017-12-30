@@ -79,7 +79,7 @@ ScenePlanning::ScenePlanning()
 		goldPosition = Vector2D((float)(5+ rand() % num_cell_x -5), (float)(rand() % 5));
 
 		if (isValidCell(goldPosition)) {
-			goldPieces.push_back(Gold(goldPosition));
+			goldPieces.push_back(new Gold(goldPosition));
 			cout << "goldPos (Coordenadas) " << goldPosition.x << " - " << goldPosition.y << endl;
 			terrain[goldPosition.x][goldPosition.y] = 0;
 		}
@@ -102,6 +102,10 @@ ScenePlanning::~ScenePlanning()
 	for (int i = 0; i < (int)agents.size(); i++)
 	{
 		delete agents[i];
+	}
+
+	for (int i = 0; i < (int)goldPieces.size(); i++) {
+		delete goldPieces[i];
 	}
 }
 
@@ -205,30 +209,42 @@ void ScenePlanning::update(float dtime, SDL_Event *event)
 		agents[0]->arrived = true;
 		//cout << "Ha llegado" << endl;
 	}
-	agents[0]->Think(dtime);
-	if (agents[0]->GetCurrentState() == agents[0]->state_mine&&agents[0]->arrived) {
-		GoldHeuristic();
-		AStar();
-	}
 
 	for (int i = 0; i < goldPieces.size(); i++) {
-		if (goldPieces[i].mined) {
-			goldPieces[i].mined = false;
+		if (goldPieces[i]->mined) {
+			//cout << "Antes " << goldPieces[i]->position.x << endl;
 
-			terrain[goldPieces[i].position.x][goldPieces[i].position.y] = 1;
+			goldPieces[i]->mined = false;
+			agents[0]->SetFoundGold(false);
 
 			Vector2D goldPosition{ -1,-1 };
 
-			goldPosition = Vector2D((float)(5 + rand() % num_cell_x - 5), (float)(rand() % 5));
 
-			if (isValidCell(goldPosition)) {
-				goldPieces.push_back(Gold(goldPosition));
-				cout << "goldPos (Coordenadas) " << goldPosition.x << " - " << goldPosition.y << endl;
+			while (!isValidCell(goldPosition))
+				goldPosition = Vector2D((float)(5 + rand() % num_cell_x - 5), (float)(rand() % 5));
+
+			terrain[goldPieces[i]->position.x][goldPieces[i]->position.y] = 1;
+
+
+			//if (isValidCell(goldPosition)) {
+				//goldPieces.push_back(new Gold(goldPosition));
+				//cout << "goldPos (Coordenadas) " << goldPosition.x << " - " << goldPosition.y << endl;
+			goldPieces[i]->position = goldPosition;
 				terrain[goldPosition.x][goldPosition.y] = 0;
-			}
+			//}
+
+				//cout << "Despues " << goldPieces[i]->position.x << endl;
+
+
+
 		}
 	}
 
+	agents[0]->Think(dtime);
+	if (agents[0]->GetCurrentState() == agents[0]->state_mine&&agents[0]->arrived&&agents[0]->GetFoundGold() == false) {
+		GoldHeuristic();
+		AStar();
+	}
 }
 
 void ScenePlanning::AStar() {
@@ -285,7 +301,10 @@ void ScenePlanning::AStar() {
 }
 
 void ScenePlanning::GoldHeuristic() {
-	Gold goldToMine = goldPieces[0];
+	cout << "GoldHeuristic" << endl;
+
+	Gold* 		goldToMine = goldPieces[0];
+
 /*float shortestDistance = SceneMultipleTarget::ManhattanHeuristic(pix2cell(agents[0]->getPosition()), coins[0]);
 	closestCoinPosition = coins[0];
 	for (int i = 1; i < coins.size(); i++) {
@@ -294,16 +313,29 @@ void ScenePlanning::GoldHeuristic() {
 			closestCoinPosition = coins[i];
 		}
 	}*/
-	float minHeuristicCalculus = goldToMine.amount / EuclideanHeuristic(pix2cell(agents[0]->getPosition()), goldToMine.position);
+
+	float minHeuristicCalculus = goldToMine->amount / EuclideanHeuristic(pix2cell(agents[0]->getPosition()), goldToMine->position);
 
 	for (int i = 0; i < goldPieces.size(); i++) {
-		if (minHeuristicCalculus > goldPieces[i].amount / EuclideanHeuristic(pix2cell(agents[0]->getPosition()), goldPieces[i].position)) {
-			minHeuristicCalculus = goldPieces[i].amount / EuclideanHeuristic(pix2cell(agents[0]->getPosition()), goldPieces[i].position);
+		if (minHeuristicCalculus < goldPieces[i]->amount / EuclideanHeuristic(pix2cell(agents[0]->getPosition()), goldPieces[i]->position)) {
+			minHeuristicCalculus = goldPieces[i]->amount / EuclideanHeuristic(pix2cell(agents[0]->getPosition()), goldPieces[i]->position);
 			goldToMine = goldPieces[i];
 		}
 	}
-	agents[0]->SetDestiny(goldToMine.position);
-	agents[0]->SetCurrentGoldPiece(&goldToMine);
+
+
+
+	//std::cout << goldToMine.position.x << endl;
+	//Gold* referenceInfo = 
+
+	agents[0]->SetCurrentGoldPiece(goldToMine);
+	goldToMine->ResetValue();
+	agents[0]->SetFoundGold(true);
+
+	//cout << "Antes " << agents[0]->GetDestiny().x << endl;
+	agents[0]->SetDestiny(goldToMine->position);
+	//cout << "Despues " << agents[0]->GetDestiny().x << endl;
+
 }
 
 void ScenePlanning::draw()
@@ -380,12 +412,17 @@ void ScenePlanning::drawCoin()
 
 
 	for (int i = 0; i < goldPieces.size(); i++) {
-		Vector2D gold_coords = cell2pix(goldPieces[i].position);
+		Vector2D gold_coords = cell2pix(goldPieces[i]->position);
 
 		SDL_Rect dstrect = { (int)gold_coords.x - offset, (int)gold_coords.y - offset, CELL_SIZE, CELL_SIZE };
 		SDL_RenderCopy(TheApp::Instance()->getRenderer(), coin_texture, NULL, &dstrect);
-	}
+		draw_circle(TheApp::Instance()->getRenderer(), (int)(gold_coords.x), (int)(gold_coords.y), 15, (int)255 / 10 * goldPieces[i]->amount, 0, 0, 255);
 
+		//draw_circle(TheApp::Instance()->getRenderer(), (int)(gold_coords.x), (int)(gold_coords.y), 15, 255 / 10 * goldPieces[i]->amount, 255 / goldPieces[i]->amount, 0, 255);
+
+
+
+	}
 }
 
 void ScenePlanning::initMaze()

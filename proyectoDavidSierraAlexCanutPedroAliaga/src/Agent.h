@@ -22,6 +22,7 @@ private:
 	Vector2D velocity;
 	Vector2D target;
 
+	bool foundGold;
 	float mass;
 	float orientation;
 	float max_force;
@@ -96,5 +97,7 @@ public:
 	void Think(float);
 	void SetCurrentGoldPiece(Gold*);
 	Gold* GetCurrentGoldPiece();
+	void SetFoundGold(bool);
+	bool GetFoundGold();
 
 };

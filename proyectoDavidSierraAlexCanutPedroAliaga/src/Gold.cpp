@@ -6,3 +6,7 @@ Gold::Gold(Vector2D pos) {
 	amount = (int)(rand() % 10);
 	mined = false;
 }
+
+void Gold::ResetValue() {
+	amount = (int)(rand() % 10);
+}

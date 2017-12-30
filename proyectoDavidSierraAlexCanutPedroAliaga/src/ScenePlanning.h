@@ -23,7 +23,7 @@ public:
 private:
 
 	std::vector<Agent*> agents;
-	std::vector<Gold>goldPieces;
+	std::vector<Gold*>goldPieces;
 	//Vector2D coinPosition;
 	Vector2D targetPosition;
 	Vector2D currentTarget;

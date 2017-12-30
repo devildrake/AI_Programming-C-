@@ -8,6 +8,6 @@ public:
 	Vector2D position;
 	bool mined;
 	Gold(Vector2D);
-	
+	void ResetValue();
 
 };

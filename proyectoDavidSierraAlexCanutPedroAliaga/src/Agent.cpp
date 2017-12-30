@@ -302,3 +302,11 @@ void Agent::SetDestiny(Vector2D a) {
 Vector2D Agent::GetDestiny() {
 	return destiny;
 }
+
+void Agent::SetFoundGold(bool a) {
+	foundGold = a;
+}
+
+bool Agent::GetFoundGold() {
+	return foundGold;
+}
