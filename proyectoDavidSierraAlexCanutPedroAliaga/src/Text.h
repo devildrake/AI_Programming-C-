@@ -16,5 +16,7 @@ private:
 public:
 	Text(std::string txt, Vector2D pos, int size);
 	void DrawText(bool);
+	void DrawText();
+
 	void SetText(std::string a);
 };

@@ -185,7 +185,9 @@ void Agent::Think(float dtime) {
 }
 
 std::string Agent::GetCurrentStateName() {
-	return currentState->GetName();
+	if (currentState != nullptr)
+		return currentState->GetName();
+	else return "null";
 }
 
 void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)
