@@ -5,7 +5,7 @@
 class StateMine : public State {
 
 public:
-
+	virtual std::string GetName();
 	virtual void Enter();
 	virtual void Exit();
 	virtual void Update(float);

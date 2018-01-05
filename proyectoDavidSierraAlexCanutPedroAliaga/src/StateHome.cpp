@@ -8,11 +8,15 @@ void StateHome::Exit() {
 	agent->arrived = false;
 }
 
+std::string StateHome::GetName() {
+	return "Home";
+}
+
 void StateHome::Update(float dtime) {
-	std::cout << "cosas" << std::endl;
+	//std::cout << "cosas" << std::endl;
 
 	if (agent->arrived) {
-		std::cout << "Esta en casa" << std::endl;
+		//std::cout << "Esta en casa" << std::endl;
 		if (this->agent->GetEnergy() == this->agent->GetMaxEnergy()) {
 			this->agent->ChangeState(1);
 		}
@@ -22,7 +26,8 @@ void StateHome::Update(float dtime) {
 			
 				if (agent->timerThirst >= agent->maxThirstTime) {
 					agent->timerThirst = 0;
-					agent->SetThirst(agent->GetThirst()+1);
+					agent->SetThirst(agent->GetThirst() + 1);
+					agent->maxThirstTime = rand() % 10 + 6;
 				}
 				if (agent->timerEnergy >= agent->maxEnergyTime) {
 					agent->timerEnergy = 0;
@@ -31,7 +36,7 @@ void StateHome::Update(float dtime) {
 		}
 	}
 	else {
-		std::cout << "No ha llegado a casa" << std::endl;
+		//std::cout << "No ha llegado a casa" << std::endl;
 	}
 }
 

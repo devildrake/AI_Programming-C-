@@ -13,8 +13,14 @@ void StateSaloon::Exit() {
 
 }
 
+std::string StateSaloon::GetName() {
+	return "Saloon";
+}
+
 void StateSaloon::Update(float dtime) {
+	agent->timerThirst += dtime;
 	if (agent->arrived) {
+		//std::cout << "Estoy en el  saloon" << std::endl;
 		if (agent->GetThirst() == 0) {
 			agent->ChangeState(1);
 		}
@@ -22,6 +28,7 @@ void StateSaloon::Update(float dtime) {
 			if (agent->timerThirst >= agent->maxThirstTime/8) {
 				agent->timerThirst = 0;
 				agent->SetThirst(agent->GetThirst() - 1);
+				agent->SetCoinsInBank(agent->GetCoinsInBank() - 5);
 			}
 		}
 	}

@@ -25,7 +25,7 @@ Agent::Agent() : sprite_texture(0),
 	state_bank = new StateBank(this, Vector2D(7, 19));
 	state_mine = new StateMine(this, Vector2D(3, 3));
 	maxEnergyTime = 10;
-	maxThirstTime = 30;
+	maxThirstTime = 6;
 	arrived = true;
 	energy = 10;
 	coinsInBank = 90;
@@ -33,7 +33,7 @@ Agent::Agent() : sprite_texture(0),
 	//bankCoords = Vector2D(7, 19);
 	houseCoords= Vector2D(20, 19);
 	//saloonCoords= Vector2D(34, 19);
-
+	thirst = 10;
 
 }
 
@@ -59,11 +59,13 @@ void Agent::DebugStats() {
 	std::cout << "Energy: " << energy << endl;
 	std::cout << "Thirst: " << thirst << endl;
 	std::cout << "Wealthy when: " << wealthThreshold << endl;
+	std::cout << "===============================" <<endl;
+	std::cout << "===============================" << endl;
 
 }
 
 void Agent::ChangeState(int state) {
-	DebugStats();
+	//DebugStats();
 	//std::cout << "Se llama a ChangeState" << std::endl;
 
 
@@ -180,6 +182,10 @@ void Agent::Think(float dtime) {
 		//cout << "agent update:" << endl;
 
 	}
+}
+
+std::string Agent::GetCurrentStateName() {
+	return currentState->GetName();
 }
 
 void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)

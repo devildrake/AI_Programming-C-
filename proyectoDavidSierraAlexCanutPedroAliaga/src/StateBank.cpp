@@ -10,6 +10,10 @@ void StateBank::Exit() {
 
 }
 
+std::string StateBank::GetName() {
+	return "Bank";
+}
+
 void StateBank::Update(float dtime) {
 	if (agent->arrived) {
 		agent->SetCoinsInBank(agent->GetGoldPieces() + agent->GetCoinsInBank());
@@ -19,6 +23,7 @@ void StateBank::Update(float dtime) {
 		}
 		else {
 			agent->ChangeState(0);
+			agent->SetWealthThreshold(agent->GetWealthThreshold() + 30);
 		}
 
 	}

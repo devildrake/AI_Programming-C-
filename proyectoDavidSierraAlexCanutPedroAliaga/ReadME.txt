@@ -1,0 +1,1 @@
+Si los textos explotan, es que hay copiar los dlls. de TTF dentro de bin a la carpeta donde se encuentre el .exe

@@ -13,6 +13,10 @@ void StateMine::Exit() {
 
 }
 
+std::string StateMine::GetName() {
+	return "Mine";
+}
+
 Vector2D cell2pix(Vector2D cell)
 {
 	int offset = CELL_SIZE / 2;
@@ -25,13 +29,13 @@ Vector2D pix2cell(Vector2D pix)
 }
 
 void StateMine::Update(float dtime) {
-
 	agent->timerThirst += dtime;
 	agent->timerEnergy += dtime;
 
 	if (agent->timerThirst >= agent->maxThirstTime) {
 		agent->timerThirst = 0;
 		agent->SetThirst(agent->GetThirst() + 1);
+		agent->maxThirstTime = rand() % 10 + 6;
 	}
 	if (agent->timerEnergy >= agent->maxEnergyTime) {
 		agent->timerEnergy = 0;
@@ -44,22 +48,18 @@ void StateMine::Update(float dtime) {
 			if ((pix2cell(agent->getPosition())) == agent->GetCurrentGoldPiece()->position) {
 				agent->GetCurrentGoldPiece()->mined = true;
 				agent->SetGoldPieces(agent->GetGoldPieces() + agent->GetCurrentGoldPiece()->amount);
-				//std::cout << "Llego al oro" << std::endl;
+
+				if (agent->GetGoldPieces() > agent->GetMaxGoldPieces()) {
+					agent->ChangeState(2);
+				}
+
+				if (agent->GetThirst() >= agent->GetMaxThirst()) {
+					agent->ChangeState(3);
+				}
 			}
 			else {
 
 			}
-		}
-
-
-		
-
-		if (agent->GetGoldPieces() > agent->GetMaxGoldPieces()) {
-			agent->ChangeState(2);
-		}
-
-		if (agent->GetThirst() > agent->GetMaxThirst()) {
-			agent->ChangeState(3);
 		}
 	
 	}

@@ -40,6 +40,7 @@ float ScenePlanning::EuclideanHeuristic(Vector2D current, Vector2D target) {
 
 ScenePlanning::ScenePlanning()
 {
+	//debugCounter = 0;
 	waitAFrame = false;
 	foundPath = false;
 	draw_grid = false;
@@ -111,7 +112,7 @@ ScenePlanning::~ScenePlanning()
 
 void ScenePlanning::update(float dtime, SDL_Event *event)
 {
-
+	//debugCounter += dtime;
 	/* Keyboard & Mouse events */
 	switch (event->type) {
 	case SDL_KEYDOWN:
@@ -245,6 +246,12 @@ void ScenePlanning::update(float dtime, SDL_Event *event)
 		GoldHeuristic();
 		AStar();
 	}
+
+
+	//if (debugCounter > 2) {
+		//agents[0]->DebugStats();
+	//	debugCounter = 0;
+	//}
 }
 
 void ScenePlanning::AStar() {
@@ -338,6 +345,29 @@ void ScenePlanning::GoldHeuristic() {
 
 }
 
+void ScenePlanning::DrawTexts() {
+	Text Data("Data", Vector2D(20, 5), 20);
+	Data.SetText("Current State: "+ agents[0]->GetCurrentStateName());
+	Data.DrawText(!draw_grid);
+
+	Text EnergyText("Data", Vector2D(400, 5), 16);
+	EnergyText.SetText("Energy: " + std::to_string(agents[0]->GetEnergy()));
+	EnergyText.DrawText(!draw_grid);
+
+	Text ThirstText("Data", Vector2D(500, 5), 16);
+	ThirstText.SetText("Thirst: " + std::to_string(agents[0]->GetThirst()));
+	ThirstText.DrawText(!draw_grid);
+
+	Text CoinsText("Coins ", Vector2D(600, 5), 16);
+	CoinsText.SetText("Gold in pockets: " + std::to_string(agents[0]->GetGoldPieces()));
+	CoinsText.DrawText(!draw_grid);
+
+	Text BankCoinsText("Data", Vector2D(800, 5), 16);
+	BankCoinsText.SetText("Money in bank: " + std::to_string(agents[0]->GetCoinsInBank()));
+	BankCoinsText.DrawText(!draw_grid);
+
+}
+
 void ScenePlanning::draw()
 {
 	SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 0, 255, 0, 127);
@@ -347,9 +377,9 @@ void ScenePlanning::draw()
 	}
 	SDL_SetRenderDrawColor(TheApp::Instance()->getRenderer(), 255, 255, 255, 127);
 
-
 	drawMaze();
 	drawCoin();
+	DrawTexts();
 
 	if (draw_grid)
 	{

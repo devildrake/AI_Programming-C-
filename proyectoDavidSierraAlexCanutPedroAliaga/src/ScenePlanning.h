@@ -8,6 +8,7 @@
 #include <queue>
 #include <map>
 #include "Gold.h"
+#include "Text.h"
 
 class ScenePlanning :
 	public Scene
@@ -22,6 +23,7 @@ public:
 
 private:
 
+	//float debugCounter;
 	std::vector<Agent*> agents;
 	std::vector<Gold*>goldPieces;
 	//Vector2D coinPosition;
@@ -59,4 +61,5 @@ private:
 	float EuclideanHeuristic(Vector2D, Vector2D);
 	float PlanHeuristic(Vector2D, Gold);
 	void GoldHeuristic();
+	void DrawTexts();
 };

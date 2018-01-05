@@ -100,4 +100,5 @@ public:
 	void SetFoundGold(bool);
 	bool GetFoundGold();
 	void DebugStats();
+	std::string GetCurrentStateName();
 };
