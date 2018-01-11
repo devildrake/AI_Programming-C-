@@ -2,7 +2,7 @@
 
 GoalOrientedReload::GoalOrientedReload() {
 	//0 es false, 1 es true, 2 es doesn't matter
-
+	id = 5;
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 1; //Té arma
 	preConditions[2] = 0; //Arma carregada

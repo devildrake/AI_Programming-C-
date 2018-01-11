@@ -1,5 +1,6 @@
 #pragma once
 #include "GoalOrientedAgent.h"
+
 class GoalOrientedAgent;
 class GoalOrientedAction {
 
@@ -7,11 +8,24 @@ class GoalOrientedAction {
 private:
 public:
 	int cost;
-	int acumulatedCost;
 	GoalOrientedAgent* agent;
 	int preConditions[8];
 	int postConditions[8];
+	int id;
 	virtual void Update()=0;
+
+	bool CheckConditions(int data[],int size) {
+		bool temp = true;
+		for (int i = 0; i < size; i++) {
+			if (preConditions[0] != 2) {
+				if (!(data[0] == preConditions[0])) {
+					temp = false;
+				}
+			}
+		}
+		return temp;
+	}
+
 
 	bool CheckConditions(std::map<GoalOrientedAgent::WorldInfo,bool> a) {
 		bool temp = true;

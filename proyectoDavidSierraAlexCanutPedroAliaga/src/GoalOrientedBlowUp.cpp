@@ -1,6 +1,7 @@
 #include "GoalOrientedBlowUp.h"
 
 GoalOrientedBlowUp::GoalOrientedBlowUp() {
+	id = 2;
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 2; //Té arma
 	preConditions[2] = 2; //Arma carregada

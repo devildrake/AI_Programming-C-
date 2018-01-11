@@ -1,6 +1,7 @@
 #include "GoalOrientedRunAway.h"
 
 GoalOrientedRunAway::GoalOrientedRunAway() {
+	id = 6;
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 0; //Té arma
 	preConditions[2] = 2; //Arma carregada

@@ -4,7 +4,7 @@ GoalOrientedIdle::GoalOrientedIdle() {
 
 	srand(time(NULL));
 	//0 es false, 1 es true, 2 es doesn't matter
-
+	id = 4;
 	preConditions[0] = 2; //Agent viu
 	preConditions[1] = 2; //Té arma
 	preConditions[2] = 2; //Arma carregada

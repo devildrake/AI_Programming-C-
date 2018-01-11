@@ -1,6 +1,7 @@
 #include "GoalOrientedApproach.h"
 
 GoalOrientedApproach::GoalOrientedApproach() {
+	id = 1;
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 1; //Té arma
 	preConditions[2] = 2; //Arma carregada

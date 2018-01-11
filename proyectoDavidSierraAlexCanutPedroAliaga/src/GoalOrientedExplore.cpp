@@ -2,7 +2,7 @@
 
 GoalOrientedExplore::GoalOrientedExplore() {
 	//0 es false, 1 es true, 2 es doesn't matter
-
+	id = 3;
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 2; //Té arma
 	preConditions[2] = 2; //Arma carregada

@@ -25,12 +25,12 @@ public:
 	SceneGoalOriented();
 	~SceneGoalOriented();
 	void ThinkAStar();
-	int ActionHeuristic(int[],GoalOrientedAction*);
+	int ActionHeuristic(GoalOrientedAgent* ,GoalOrientedAction*);
 	void ClearAStar();
 	std::priority_queue<GoalOrientedAction*>frontier;
 	std::unordered_map<GoalOrientedAction*, GoalOrientedAction*>came_from;
 	std::unordered_map<GoalOrientedAction*, float>cost_so_far;
-	
+	std::vector<GoalOrientedAction*> actionsToComplete;
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();
