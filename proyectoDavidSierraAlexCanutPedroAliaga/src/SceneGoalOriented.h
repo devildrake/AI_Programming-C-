@@ -3,10 +3,12 @@
 #include <time.h>
 #include "Scene.h"
 #include "GoalOrientedAgent.h"
+#include "GoalOrientedAction.h"
 #include "Path.h"
 #include "Graph.h"
 #include <queue>
 #include <map>
+#include <unordered_map>
 #include "Gold.h"
 #include "Text.h"
 
@@ -16,6 +18,13 @@ class SceneGoalOriented :
 public:
 	SceneGoalOriented();
 	~SceneGoalOriented();
+	void ThinkAStar();
+	int ActionHeuristic(int[],GoalOrientedAction*);
+	void ClearAStar();
+	priority_queue<GoalOrientedAction>frontier;
+	unordered_map<GoalOrientedAction, GoalOrientedAction>came_from;
+	map<GoalOrientedAction, float>cost_so_far;
+	
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();

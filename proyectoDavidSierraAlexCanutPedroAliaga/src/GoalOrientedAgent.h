@@ -13,13 +13,15 @@ class GoalOrientedAgent
 {
 private:
 public:
-	enum WorldInfo{AGENT_ALIVE,AGENT_HASwEAPON,AGENT_WEAPONLOADED,AGENT_HASBOMB,ENEMY_INSIGHT,ENEMY_ALIGNED,ENEMY_NEAR,ENEMY_ALIVE};
+	enum WorldInfo{AGENT_ALIVE,AGENT_HASWEAPON,AGENT_WEAPONLOADED,AGENT_HASBOMB,ENEMY_INSIGHT,ENEMY_ALIGNED,ENEMY_NEAR,ENEMY_ALIVE};
 	std::map <WorldInfo, bool> worldDictionary;
+	std::map <WorldInfo, bool > goalWorld;
 	GoalOrientedAgent();
 	~GoalOrientedAgent();
 	void update(float dtime, SDL_Event *event);
 	void ChangeState(int state);
 	//void UpdateStats(float );
 	GoalOrientedAction* currentAction;
+	
 
 };

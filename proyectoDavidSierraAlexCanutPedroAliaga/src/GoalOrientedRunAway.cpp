@@ -1,14 +1,23 @@
 #include "GoalOrientedRunAway.h"
 
 GoalOrientedRunAway::GoalOrientedRunAway() {
-	conditions[0] = 1; //Agent viu
-	conditions[1] = 0; //Té arma
-	conditions[2] = 2; //Arma carregada
-	conditions[3] = 0; //Té bomba
-	conditions[4] = 1; //Enemic visible
-	conditions[5] = 2; //Enemic alineat
-	conditions[6] = 2; //Enemic a prop
-	conditions[7] = 2; //Enemic viu
+	preConditions[0] = 1; //Agent viu
+	preConditions[1] = 0; //Té arma
+	preConditions[2] = 2; //Arma carregada
+	preConditions[3] = 0; //Té bomba
+	preConditions[4] = 1; //Enemic visible
+	preConditions[5] = 2; //Enemic alineat
+	preConditions[6] = 2; //Enemic a prop
+	preConditions[7] = 2; //Enemic viu
+
+	postConditions[0] = 1;
+	postConditions[1] = 0;
+	postConditions[2] = 2;
+	postConditions[3] = 0;
+	postConditions[4] = 0;
+	postConditions[5] = 2;
+	postConditions[6] = 0;
+	postConditions[7] = 2;
 }
 
 void GoalOrientedRunAway::Update() {

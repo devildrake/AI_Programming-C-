@@ -1,14 +1,24 @@
 #include "GoalOrientedBlowUp.h"
 
 GoalOrientedBlowUp::GoalOrientedBlowUp() {
-	conditions[0] = 1; //Agent viu
-	conditions[1] = 2; //Té arma
-	conditions[2] = 2; //Arma carregada
-	conditions[3] = 2; //Té bomba
-	conditions[4] = 1; //Enemic visible
-	conditions[5] = 2; //Enemic alineat
-	conditions[6] = 1; //Enemic a prop
-	conditions[7] = 1; //Enemic viu
+	preConditions[0] = 1; //Agent viu
+	preConditions[1] = 2; //Té arma
+	preConditions[2] = 2; //Arma carregada
+	preConditions[3] = 2; //Té bomba
+	preConditions[4] = 1; //Enemic visible
+	preConditions[5] = 2; //Enemic alineat
+	preConditions[6] = 1; //Enemic a prop
+	preConditions[7] = 1; //Enemic viu
+
+	postConditions[0] = 0;
+	postConditions[1] = 0;
+	postConditions[2] = 0;
+	postConditions[3] = 0;
+	postConditions[4] = 0;
+	postConditions[5] = 0;
+	postConditions[6] = 0;
+	postConditions[7] = 0;
+
 }
 
 void GoalOrientedBlowUp::Update() {

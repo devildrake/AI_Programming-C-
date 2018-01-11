@@ -6,7 +6,7 @@
 #include "GoalOrientedReload.h"
 #include "GoalOrientedRunAway.h"
 #include "GoalOrientedShoot.h"
-
+#include "GoalOrientedIdle.h"
 using namespace std;
 GoalOrientedAgent::GoalOrientedAgent(){
 

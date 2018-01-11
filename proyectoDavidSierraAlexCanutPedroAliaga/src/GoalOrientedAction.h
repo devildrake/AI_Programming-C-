@@ -7,47 +7,49 @@ class GoalOrientedAction {
 private:
 public:
 	GoalOrientedAgent* agent;
-	int conditions[8];
+	int preConditions[8];
+	int postConditions[8];
 	virtual void Update()=0;
+
 	bool CheckConditions(std::map<GoalOrientedAgent::WorldInfo,bool> a) {
 		bool temp = true;
-		if (conditions[0] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_ALIVE] == conditions[0])) {
+		if (preConditions[0] != 2) {
+			if (!(a[GoalOrientedAgent::AGENT_ALIVE] == preConditions[0])) {
 				temp = false;
 			}
 		}
-		if (conditions[1] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_HASwEAPON] == conditions[1])) {
+		if (preConditions[1] != 2) {
+			if (!(a[GoalOrientedAgent::AGENT_HASWEAPON] == preConditions[1])) {
 				temp = false;
 			}
 		}
-		if (conditions[2] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_WEAPONLOADED] == conditions[2])) {
+		if (preConditions[2] != 2) {
+			if (!(a[GoalOrientedAgent::AGENT_WEAPONLOADED] == preConditions[2])) {
 				temp = false;
 			}
 		}
-		if (conditions[3] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_HASBOMB] == conditions[3])) {
+		if (preConditions[3] != 2) {
+			if (!(a[GoalOrientedAgent::AGENT_HASBOMB] == preConditions[3])) {
 				temp = false;
 			}
 		}
-		if (conditions[4] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_INSIGHT] == conditions[4])) {
+		if (preConditions[4] != 2) {
+			if (!(a[GoalOrientedAgent::ENEMY_INSIGHT] == preConditions[4])) {
 				temp = false;
 			}
 		}
-		if (conditions[5] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_ALIGNED] == conditions[5])) {
+		if (preConditions[5] != 2) {
+			if (!(a[GoalOrientedAgent::ENEMY_ALIGNED] == preConditions[5])) {
 				temp = false;
 			}
 		}
-		if (conditions[6] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_NEAR] == conditions[6])) {
+		if (preConditions[6] != 2) {
+			if (!(a[GoalOrientedAgent::ENEMY_NEAR] == preConditions[6])) {
 				temp = false;
 			}
 		}
-		if (conditions[7] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_ALIVE] == conditions[7])) {
+		if (preConditions[7] != 2) {
+			if (!(a[GoalOrientedAgent::ENEMY_ALIVE] == preConditions[7])) {
 				temp = false;
 			}
 		}

@@ -29,13 +29,41 @@ SceneGoalOriented::~SceneGoalOriented()
 	}
 }
 
+int SceneGoalOriented::ActionHeuristic(int a[], GoalOrientedAction* b) {
+	int temp = 0;
+	for (int i = 0; i < 8; i++) {
+		if (a[i] != b->preConditions[i]&&b->preConditions[i]!=2) {
+			temp++;
+		}
+	}
+	return temp;
+}
+
 void SceneGoalOriented::update(float dtime, SDL_Event *event)
 {
+
+
+
+}
+
+void SceneGoalOriented::ClearAStar() {
+	while (!frontier.empty) {
+		frontier.pop();
+	}
+	came_from.clear();
+	cost_so_far.clear();
+}
+
+
+void SceneGoalOriented::ThinkAStar() {
+	ClearAStar();
+
+	frontier.push();
 
 }
 
 void SceneGoalOriented::DrawTexts() {
-	Text Data("Data", Vector2D(20, 5), 20);
+	Text Data("Alive", Vector2D(20, 5), 20);
 	Data.SetText("I'm Alive");
 	Data.DrawText();
 
