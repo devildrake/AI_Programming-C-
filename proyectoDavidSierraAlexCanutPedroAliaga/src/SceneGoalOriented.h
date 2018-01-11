@@ -25,19 +25,22 @@ public:
 	SceneGoalOriented();
 	~SceneGoalOriented();
 	void ThinkAStar();
-	int ActionHeuristic(GoalOrientedAgent* ,GoalOrientedAction*);
+	int ActionHeuristic(WorldState* ,WorldState*);
 	void ClearAStar();
 	std::priority_queue<WorldState*>frontier;
 	std::unordered_map<WorldState*, WorldState*>came_from;
 	std::unordered_map<WorldState*, float>cost_so_far;
 	std::vector<GoalOrientedAction*> actionsToComplete;
+	bool foundPlan;
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();
 	void DrawTexts();
 
 private:
+	Text Data;
 	SDL_Texture *background_texture;
 	bool loadTextures(char* filename_bg, char* filename_coin);
 	std::vector<GoalOrientedAgent*> agents;
+	WorldState* goalWorld;
 };

@@ -11,6 +11,13 @@
 using namespace std;
 GoalOrientedAgent::GoalOrientedAgent(){
 	//currentWorld = WorldState::GenerateRandomState(-1);
+	aimAction = new GoalOrientedAim();
+	approachAction = new GoalOrientedApproach();
+	blowUpAction = new GoalOrientedBlowUp();
+	exploreAction = new GoalOrientedExplore();
+	reloadAction = new GoalOrientedReload();
+	runAwayAction = new GoalOrientedRunAway();
+	shootAction = new GoalOrientedShoot();
 }
 
 void GoalOrientedAgent::SetWorldStateConditions(int data[8]) {

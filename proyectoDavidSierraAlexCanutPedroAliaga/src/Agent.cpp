@@ -34,7 +34,7 @@ Agent::Agent() : sprite_texture(0),
 	houseCoords= Vector2D(20, 19);
 	//saloonCoords= Vector2D(34, 19);
 	thirst = 10;
-
+	planIndex = 0;
 }
 
 Agent::~Agent()
@@ -44,6 +44,8 @@ Agent::~Agent()
 	if (steering_behavior)
 		delete (steering_behavior);
 }
+
+
 
 void Agent::SetCurrentGoldPiece(Gold* gold) {
 	currentGoldPiece = gold;
@@ -188,6 +190,13 @@ std::string Agent::GetCurrentStateName() {
 	if (currentState != nullptr)
 		return currentState->GetName();
 	else return "null";
+}
+
+int Agent::GetPlanIndex() {
+	return planIndex;
+}
+void Agent::SetPlanIndex(int a) {
+	planIndex = a;
 }
 
 void Agent::update(Vector2D steering_force, float dtime, SDL_Event *event)

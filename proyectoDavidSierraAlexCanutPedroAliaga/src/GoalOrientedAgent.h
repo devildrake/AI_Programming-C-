@@ -14,6 +14,14 @@ class GoalOrientedAgent
 {
 private:
 public:
+	GoalOrientedAction* aimAction;
+	GoalOrientedAction* approachAction;
+	GoalOrientedAction* blowUpAction;
+	GoalOrientedAction* exploreAction;
+	GoalOrientedAction* reloadAction;
+	GoalOrientedAction* runAwayAction;
+	GoalOrientedAction* shootAction;
+
 	GoalOrientedAgent();
 	~GoalOrientedAgent();
 	void update(float dtime, SDL_Event *event);

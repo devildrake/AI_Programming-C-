@@ -5,8 +5,22 @@
 using namespace std;
 
 
-static inline bool operator < (const GoalOrientedAction& lhs, const GoalOrientedAction& rhs) {
-	return lhs.cost>rhs.cost;
+//static inline bool operator < (const GoalOrientedAction& lhs, const GoalOrientedAction& rhs) {
+//	return lhs.cost>rhs.cost;
+//}
+
+static inline bool operator < (const WorldState& lhs, const WorldState& rhs) {
+	return lhs.acumulatedCost>rhs.acumulatedCost;
+}
+
+int SceneGoalOriented::ActionHeuristic(WorldState* lhs, WorldState* rhs) {
+	int temp = 0;
+	for (int i = 0; i < 8; i++) {
+		if (lhs->conditions[i] != 2 && rhs->conditions[i] != 2 && lhs->conditions[i] != rhs->conditions[i]) {
+			temp++;
+		}
+	}
+	return temp;
 }
 
 SceneGoalOriented::SceneGoalOriented()
@@ -21,6 +35,8 @@ SceneGoalOriented::SceneGoalOriented()
 
 	agents.push_back(agent);
 
+	foundPlan = false;
+
 }
 
 SceneGoalOriented::~SceneGoalOriented()
@@ -33,30 +49,91 @@ SceneGoalOriented::~SceneGoalOriented()
 
 void SceneGoalOriented::update(float dtime, SDL_Event *event)
 {
-
+	if (foundPlan) {
+		if (agents[0]->currentWorld != goalWorld) {
+			//actionsToComplete[planIndex]->Update(agents[0]);
+		}
+		else {
+			foundPlan = false;
+			//agents[0]->SetPlanIndex(0);
+			//agents[0]->SetPlanIndex(agents[0]->GetPlanIndex());
+		}
+	}
 }
 
 void SceneGoalOriented::ClearAStar() {
+	foundPlan = false;
 	while (!frontier.empty()) {
 		frontier.pop();
 	}
 
-	//for (std::map<WorldState*, WorldState*>::iterator it = came_from.begin(); it != came_from.end(); ++it) {
+	for (std::unordered_map<WorldState*, WorldState*>::iterator it = came_from.begin(); it != came_from.end(); ++it) {
+		it->second = nullptr;
+	}
 
-	//}
-
-	came_from.clear();
-	cost_so_far.clear();
+	for (std::unordered_map<WorldState*, float>::iterator it = cost_so_far.begin(); it != cost_so_far.end(); ++it) {
+		it->second = -1;
+	}
 }
 
 
 void SceneGoalOriented::ThinkAStar() {
 	ClearAStar();
 
+	frontier.push(agents[0]->currentWorld);
+	came_from[agents[0]->currentWorld] = nullptr;
+	cost_so_far[agents[0]->currentWorld] = 0;
+
+	WorldState* current;
+
+	std::vector<GoalOrientedAction*> availableActions;
+	availableActions.push_back(agents[0]->aimAction);
+	availableActions.push_back(agents[0]->approachAction);
+	availableActions.push_back(agents[0]->blowUpAction);
+	availableActions.push_back(agents[0]->exploreAction);
+	availableActions.push_back(agents[0]->reloadAction);
+	availableActions.push_back(agents[0]->runAwayAction);
+	availableActions.push_back(agents[0]->shootAction);
+
+	while (!frontier.empty()) {
+		current = frontier.top();
+
+		if (WorldState::Equals(*current, *goalWorld)) {
+			goalWorld->createdBy = current->createdBy;
+			break;
+		}
+
+		std::vector<WorldState>neighbours;
+
+		for (int i = 0; i < 7; i++) {
+			if (WorldState::isDoable(*current, availableActions[i])) {
+				neighbours.push_back(WorldState(availableActions[i]->preConditions, availableActions[i]));
+			}
+		}
+		
+		for (int i = 0; i < neighbours.size(); i++) {
+			int newCost = cost_so_far[current] + neighbours[i].createdBy->cost + ActionHeuristic(current,&neighbours[i]);
+			if (cost_so_far[&neighbours[i]] == -1||newCost<cost_so_far[&neighbours[i]]) {
+				cost_so_far[&neighbours[i]] = newCost;
+				neighbours[i].acumulatedCost = newCost;
+				frontier.push(&neighbours[i]);
+				came_from[&neighbours[i]] = current;
+			}
+		}
+
+		current = goalWorld;
+		
+		actionsToComplete.push_back(current->createdBy);
+
+		while (!WorldState::Equals(*current, *agents[0]->currentWorld)) {
+			current = came_from[current];
+			actionsToComplete.insert(actionsToComplete.begin(),current->createdBy);
+		}
+		foundPlan = true;
+	}
 }
 
 void SceneGoalOriented::DrawTexts() {
-	Text Data("Alive", Vector2D(20, 5), 20);
 	Data.SetText("I'm Alive");
 	Data.DrawText();
 }

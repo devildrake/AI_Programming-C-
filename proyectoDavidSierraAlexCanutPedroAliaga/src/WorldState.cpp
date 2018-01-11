@@ -1,11 +1,29 @@
 #include "WorldState.h"
-
-WorldState::WorldState(int id, int data[]) {
-
-	this->id = id;
+#include "GoalOrientedAction.h"
+WorldState::WorldState(int data[],GoalOrientedAction* action) {
+	createdBy = action;
 	for (int i = 0; i < 8; i++) {
 		conditions[i] = data[i];
 	}
+	acumulatedCost = 0;
+}
+
+bool WorldState::isDoable(WorldState state, GoalOrientedAction* action) {
+	bool temp = true;
+	for (int i = 0; i < 8; i++) {
+		if (state.conditions[i] != 2 && action->preConditions[i] != 2 && state.conditions[i] != action->preConditions[i]) {
+			temp = false;
+		}
+	}
+	return temp;
+}
+
+WorldState::WorldState(int data[]) {
+	createdBy = nullptr;
+	for (int i = 0; i < 8; i++) {
+		conditions[i] = data[i];
+	}
+	acumulatedCost = 0;
 }
 
 bool WorldState::Equals(int id1, int id2) {
@@ -28,7 +46,7 @@ static WorldState* GenerateRandomState(int id){
 		tempData[i] = rand() % 2;
 	}
 	tempData[0] = true;
-	WorldState* temp = new WorldState(id, tempData);
+	WorldState* temp = new WorldState(tempData);
 
 return temp;
 }

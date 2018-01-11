@@ -48,6 +48,7 @@ private:
 	State* currentState;
 	Vector2D destiny;
 	Gold* currentGoldPiece;
+	int planIndex;
 
 public:
 	Agent();
@@ -101,4 +102,6 @@ public:
 	bool GetFoundGold();
 	void DebugStats();
 	std::string GetCurrentStateName();
+	int GetPlanIndex();
+	void SetPlanIndex(int);
 };
