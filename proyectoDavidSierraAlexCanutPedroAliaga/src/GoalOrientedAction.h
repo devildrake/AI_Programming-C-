@@ -13,8 +13,8 @@ public:
 	int id;
 
 	void Update(GoalOrientedAgent* agent) {
-
 		agent->SetWorldStateConditions(postConditions);
+		agent->SetPlanIndex(agent->GetPlanIndex() + 1);
 
 	}
 

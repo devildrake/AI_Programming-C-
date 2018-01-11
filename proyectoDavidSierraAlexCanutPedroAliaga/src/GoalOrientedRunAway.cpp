@@ -19,4 +19,5 @@ GoalOrientedRunAway::GoalOrientedRunAway() {
 	postConditions[5] = 2;
 	postConditions[6] = 0;
 	postConditions[7] = 2;
+	cost = 2;
 }

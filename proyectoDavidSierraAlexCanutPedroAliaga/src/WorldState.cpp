@@ -26,6 +26,20 @@ WorldState::WorldState(int data[]) {
 	acumulatedCost = 0;
 }
 
+void WorldState::DebugBits() {
+	std::string debugLog;
+
+	for (int i = 0; i < 8; i++) {
+		if (conditions[i])
+			debugLog += "1";
+		else
+			debugLog += "0";
+
+	}
+
+	std::cout << debugLog << std::endl;
+}
+
 bool WorldState::Equals(int id1, int id2) {
 	return id1 == id2;
 }
@@ -40,7 +54,7 @@ bool WorldState::Equals(WorldState lhs, WorldState rhs) {
 	return temp;
 }
 
-static WorldState* GenerateRandomState(int id){
+WorldState* WorldState::GenerateRandomState(){
 	int tempData[8];
 	for (int i = 0; i < 8; i++) {
 		tempData[i] = rand() % 2;

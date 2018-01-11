@@ -13,6 +13,8 @@ class WorldState;
 class GoalOrientedAgent
 {
 private:
+	int planIndex;
+
 public:
 	GoalOrientedAction* aimAction;
 	GoalOrientedAction* approachAction;
@@ -21,11 +23,13 @@ public:
 	GoalOrientedAction* reloadAction;
 	GoalOrientedAction* runAwayAction;
 	GoalOrientedAction* shootAction;
+	GoalOrientedAction* idleAction;
 
 	GoalOrientedAgent();
 	~GoalOrientedAgent();
 	void update(float dtime, SDL_Event *event);
 	WorldState* currentWorld;
 	void SetWorldStateConditions(int[8]);
-
+	int GetPlanIndex();
+	void SetPlanIndex(int);
 };

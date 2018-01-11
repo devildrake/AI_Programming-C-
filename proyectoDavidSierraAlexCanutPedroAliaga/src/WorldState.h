@@ -11,6 +11,7 @@ public:
 	static bool isDoable(WorldState, GoalOrientedAction*);
 	int acumulatedCost;
 	int conditions[8];
-	static WorldState* GenerateRandomState(int );
+	static WorldState* GenerateRandomState();
 	GoalOrientedAction* createdBy;
+	void DebugBits();
 };

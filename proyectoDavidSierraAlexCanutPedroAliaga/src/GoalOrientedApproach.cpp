@@ -19,4 +19,5 @@ GoalOrientedApproach::GoalOrientedApproach() {
 	postConditions[5] = 2;
 	postConditions[6] = 1;
 	postConditions[7] = 1;
+	cost = 2;
 }

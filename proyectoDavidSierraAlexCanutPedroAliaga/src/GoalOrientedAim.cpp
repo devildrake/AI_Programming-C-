@@ -20,4 +20,5 @@ GoalOrientedAim::GoalOrientedAim() {
 	postConditions[5] = 1;
 	postConditions[6] = 1;
 	postConditions[7] = 1;
+	cost = 1;
 }

@@ -36,11 +36,11 @@ public:
 	void draw();
 	const char* getTitle();
 	void DrawTexts();
+	std::vector<GoalOrientedAgent*> agents;
 
 private:
 	Text Data;
 	SDL_Texture *background_texture;
 	bool loadTextures(char* filename_bg, char* filename_coin);
-	std::vector<GoalOrientedAgent*> agents;
 	WorldState* goalWorld;
 };

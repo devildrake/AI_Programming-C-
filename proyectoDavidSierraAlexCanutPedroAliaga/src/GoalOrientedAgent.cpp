@@ -18,6 +18,16 @@ GoalOrientedAgent::GoalOrientedAgent(){
 	reloadAction = new GoalOrientedReload();
 	runAwayAction = new GoalOrientedRunAway();
 	shootAction = new GoalOrientedShoot();
+	idleAction = new GoalOrientedIdle();
+	currentWorld = WorldState::GenerateRandomState();
+	currentWorld->conditions[0] = 1;
+}
+
+int GoalOrientedAgent::GetPlanIndex() {
+	return planIndex;
+}
+void GoalOrientedAgent::SetPlanIndex(int a) {
+	planIndex = a;
 }
 
 void GoalOrientedAgent::SetWorldStateConditions(int data[8]) {

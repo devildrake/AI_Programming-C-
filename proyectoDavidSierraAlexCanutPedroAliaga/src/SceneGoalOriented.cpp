@@ -2,6 +2,7 @@
 #include "SceneGoalOriented.h"
 #include "GoalOrientedAgent.h"
 #include "WorldState.h"
+#include <time.h>
 using namespace std;
 
 
@@ -27,7 +28,8 @@ SceneGoalOriented::SceneGoalOriented()
 {
 	loadTextures("../res/maze.png", "../res/coin.png");
 
-	srand((unsigned int)time(NULL));
+	//srand((unsigned int)time(NULL));
+	srand(time(NULL));
 
 	GoalOrientedAgent *agent = new GoalOrientedAgent;
 
@@ -36,6 +38,11 @@ SceneGoalOriented::SceneGoalOriented()
 	agents.push_back(agent);
 
 	foundPlan = false;
+
+	goalWorld = WorldState::GenerateRandomState();
+	std::cout << "World state to go to ";
+	goalWorld->DebugBits();
+	ThinkAStar();
 
 }
 
@@ -51,12 +58,19 @@ void SceneGoalOriented::update(float dtime, SDL_Event *event)
 {
 	if (foundPlan) {
 		if (agents[0]->currentWorld != goalWorld) {
-			//actionsToComplete[planIndex]->Update(agents[0]);
+
+			agents[0]->currentWorld->DebugBits();
+			actionsToComplete[agents[0]->GetPlanIndex()]->Update(agents[0]);
+			std::cout << "Action done now: " << std::endl;
+			agents[0]->currentWorld->DebugBits();
+
+			//agents[0]->SetPlanIndex(agents[0]->GetPlanIndex()+1);
+
 		}
 		else {
 			foundPlan = false;
-			//agents[0]->SetPlanIndex(0);
-			//agents[0]->SetPlanIndex(agents[0]->GetPlanIndex());
+			agents[0]->SetPlanIndex(0);
+
 		}
 	}
 }
@@ -78,12 +92,15 @@ void SceneGoalOriented::ClearAStar() {
 
 
 void SceneGoalOriented::ThinkAStar() {
+
 	ClearAStar();
 
+	//ES POSIBLE QUE EN ESTAS CUATRO LÏNEAS ALGO PATINE
+	agents[0]->currentWorld->createdBy = agents[0]->idleAction;
 	frontier.push(agents[0]->currentWorld);
-	came_from[agents[0]->currentWorld] = nullptr;
+	came_from[agents[0]->currentWorld] = agents[0]->currentWorld;
 	cost_so_far[agents[0]->currentWorld] = 0;
-
+	
 	WorldState* current;
 
 	std::vector<GoalOrientedAction*> availableActions;
@@ -94,6 +111,10 @@ void SceneGoalOriented::ThinkAStar() {
 	availableActions.push_back(agents[0]->reloadAction);
 	availableActions.push_back(agents[0]->runAwayAction);
 	availableActions.push_back(agents[0]->shootAction);
+
+	//LAS DOS LINEAS BAOJ ESTO NO LAS TENGO CLARAS
+	current = agents[0]->currentWorld;
+	came_from[current] = agents[0]->currentWorld;
 
 	while (!frontier.empty()) {
 		current = frontier.top();
@@ -108,29 +129,37 @@ void SceneGoalOriented::ThinkAStar() {
 		for (int i = 0; i < 7; i++) {
 			if (WorldState::isDoable(*current, availableActions[i])) {
 				neighbours.push_back(WorldState(availableActions[i]->preConditions, availableActions[i]));
+
 			}
 		}
-		
+
 		for (int i = 0; i < neighbours.size(); i++) {
-			int newCost = cost_so_far[current] + neighbours[i].createdBy->cost + ActionHeuristic(current,&neighbours[i]);
-			if (cost_so_far[&neighbours[i]] == -1||newCost<cost_so_far[&neighbours[i]]) {
+			int newCost = cost_so_far[current] + neighbours[i].createdBy->cost + ActionHeuristic(current, &neighbours[i]);
+			if (cost_so_far[&neighbours[i]] == -1 || newCost < cost_so_far[&neighbours[i]]) {
+				std::cout << "Add" << std::endl;
 				cost_so_far[&neighbours[i]] = newCost;
 				neighbours[i].acumulatedCost = newCost;
 				frontier.push(&neighbours[i]);
 				came_from[&neighbours[i]] = current;
 			}
 		}
-
-		current = goalWorld;
-		
-		actionsToComplete.push_back(current->createdBy);
-
-		while (!WorldState::Equals(*current, *agents[0]->currentWorld)) {
-			current = came_from[current];
-			actionsToComplete.insert(actionsToComplete.begin(),current->createdBy);
-		}
-		foundPlan = true;
+		frontier.pop();
 	}
+
+	goalWorld->createdBy = current->createdBy;
+
+	current = goalWorld;
+
+	actionsToComplete.push_back(current->createdBy);
+
+
+	while (!WorldState::Equals(*current, *agents[0]->currentWorld)) {
+		//AQUI PEGA UNA NULLREFERENCE DEL CARAJO
+		current = came_from[current];
+		actionsToComplete.insert(actionsToComplete.begin(), current->createdBy);
+	}
+	foundPlan = true;
+
 }
 
 void SceneGoalOriented::DrawTexts() {

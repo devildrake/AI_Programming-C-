@@ -20,5 +20,5 @@ GoalOrientedShoot::GoalOrientedShoot() {
 	postConditions[5] = 0;
 	postConditions[6] = 0;
 	postConditions[7] = 0;
-
+	cost = 2;
 }

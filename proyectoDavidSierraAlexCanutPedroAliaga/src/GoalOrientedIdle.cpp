@@ -14,14 +14,27 @@ GoalOrientedIdle::GoalOrientedIdle() {
 	preConditions[6] = 2; //Enemic a prop
 	preConditions[7] = 2; //Enemic viu
 
-	postConditions[0] = 1;
-	postConditions[1] = rand() % 2;
-	postConditions[2] = rand() % 2;
-	postConditions[3] = 1;
-	postConditions[4] = rand() % 2;
-	postConditions[5] = rand() % 2;
-	postConditions[6] = rand() % 2;
-	postConditions[7] = rand() % 2;
+	postConditions[0] = 2;
+	postConditions[1] = 2;
+	postConditions[2] = 2;
+	postConditions[3] = 2;
+	postConditions[4] = 2;
+	postConditions[5] = 2;
+	postConditions[6] = 2;
+	postConditions[7] = 2;
+
+
+
+
+
+	//postConditions[0] = 1;
+	//postConditions[1] = rand() % 2;
+	//postConditions[2] = rand() % 2;
+	//postConditions[3] = 1;
+	//postConditions[4] = rand() % 2;
+	//postConditions[5] = rand() % 2;
+	//postConditions[6] = rand() % 2;
+	//postConditions[7] = rand() % 2;
 	/*agent->currentAction = this;
 
 	agent->worldDictionary[agent->AGENT_ALIVE] = postConditions[0];

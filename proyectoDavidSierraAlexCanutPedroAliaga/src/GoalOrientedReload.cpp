@@ -20,5 +20,5 @@ GoalOrientedReload::GoalOrientedReload() {
 	postConditions[5] = 2;
 	postConditions[6] = 2;
 	postConditions[7] = 2;
-
+	cost = 1;
 }
