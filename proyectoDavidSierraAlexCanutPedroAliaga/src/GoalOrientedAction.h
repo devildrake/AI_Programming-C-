@@ -6,6 +6,8 @@ class GoalOrientedAction {
 	//Agent_viu, Agent_te_Arma, Arma_carregada,  Agent_te_Bomba, Enemic_visible, Enemic_alineat ,Enemic_aprop, Enemic_viu
 private:
 public:
+	int cost;
+	int acumulatedCost;
 	GoalOrientedAgent* agent;
 	int preConditions[8];
 	int postConditions[8];

@@ -1,9 +1,11 @@
 #define NullVector Vector2D{-1-1}
 #include "SceneGoalOriented.h"
+#include "GoalOrientedAgent.h"
 
 using namespace std;
 
-static inline bool operator < (const Node& lhs, const Node& rhs) {
+
+static inline bool operator < (const GoalOrientedAction& lhs, const GoalOrientedAction& rhs) {
 	return lhs.acumulatedCost>rhs.acumulatedCost;
 }
 
@@ -47,7 +49,7 @@ void SceneGoalOriented::update(float dtime, SDL_Event *event)
 }
 
 void SceneGoalOriented::ClearAStar() {
-	while (!frontier.empty) {
+	while (!frontier.empty()) {
 		frontier.pop();
 	}
 	came_from.clear();
@@ -57,8 +59,16 @@ void SceneGoalOriented::ClearAStar() {
 
 void SceneGoalOriented::ThinkAStar() {
 	ClearAStar();
+	agents[0]->currentAction = agents[0]->idleAction;
+	frontier.push(agents[0]->currentAction);
+	GoalOrientedAction* current;
+	while (!frontier.empty()) {
+		current = frontier.top();
 
-	frontier.push();
+
+	}
+
+
 
 }
 
@@ -66,8 +76,6 @@ void SceneGoalOriented::DrawTexts() {
 	Text Data("Alive", Vector2D(20, 5), 20);
 	Data.SetText("I'm Alive");
 	Data.DrawText();
-
-
 }
 
 void SceneGoalOriented::draw()

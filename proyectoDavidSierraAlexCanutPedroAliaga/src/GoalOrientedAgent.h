@@ -20,8 +20,18 @@ public:
 	~GoalOrientedAgent();
 	void update(float dtime, SDL_Event *event);
 	void ChangeState(int state);
-	//void UpdateStats(float );
+
+	//puntero al actual
 	GoalOrientedAction* currentAction;
-	
+
+	GoalOrientedAction* idleAction;
+	GoalOrientedAction* aimAction;
+	GoalOrientedAction* blowUpAction;
+	GoalOrientedAction* approachAction;
+	GoalOrientedAction* runAwayAction;
+	GoalOrientedAction* exploreAction;
+	GoalOrientedAction* reloadAction;
+	GoalOrientedAction* shootAction;
+
 
 };

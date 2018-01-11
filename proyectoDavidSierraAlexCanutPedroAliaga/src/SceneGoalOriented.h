@@ -2,14 +2,20 @@
 #include <vector>
 #include <time.h>
 #include "Scene.h"
-#include "GoalOrientedAgent.h"
 #include "GoalOrientedAction.h"
+//#include "GoalOrientedAim.h"
+//#include "GoalOrientedApproach.h"
+//#include "GoalOrientedBlowUp.h"
+//#include "GoalOrientedExplore.h"
+//#include "GoalOrientedIdle.h"
+//#include "GoalOrientedReload.h"
+//#include "GoalOrientedRunAway.h"
+//#include "GoalOrientedShoot.h"
 #include "Path.h"
 #include "Graph.h"
 #include <queue>
 #include <map>
 #include <unordered_map>
-#include "Gold.h"
 #include "Text.h"
 
 class SceneGoalOriented :
@@ -21,9 +27,9 @@ public:
 	void ThinkAStar();
 	int ActionHeuristic(int[],GoalOrientedAction*);
 	void ClearAStar();
-	priority_queue<GoalOrientedAction>frontier;
-	unordered_map<GoalOrientedAction, GoalOrientedAction>came_from;
-	map<GoalOrientedAction, float>cost_so_far;
+	std::priority_queue<GoalOrientedAction*>frontier;
+	std::unordered_map<GoalOrientedAction*, GoalOrientedAction*>came_from;
+	std::unordered_map<GoalOrientedAction*, float>cost_so_far;
 	
 	void update(float dtime, SDL_Event *event);
 	void draw();
