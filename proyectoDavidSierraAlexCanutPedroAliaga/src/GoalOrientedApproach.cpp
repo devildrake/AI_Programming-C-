@@ -20,7 +20,3 @@ GoalOrientedApproach::GoalOrientedApproach() {
 	postConditions[6] = 1;
 	postConditions[7] = 1;
 }
-
-void GoalOrientedApproach::Update() {
-	agent->worldDictionary[agent->ENEMY_NEAR]= true;
-}

@@ -23,6 +23,21 @@ public:
 
 private:
 
+	Text Data;
+
+	Text EnergyText;
+
+
+	Text ThirstText;
+
+
+	Text CoinsText;
+
+
+	Text BankCoinsText;
+
+
+
 	//float debugCounter;
 	std::vector<Agent*> agents;
 	std::vector<Gold*>goldPieces;

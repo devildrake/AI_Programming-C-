@@ -22,7 +22,3 @@ GoalOrientedReload::GoalOrientedReload() {
 	postConditions[7] = 2;
 
 }
-
-void GoalOrientedReload::Update() {
-	agent->worldDictionary[agent->AGENT_WEAPONLOADED] = true;
-}

@@ -1,5 +1,4 @@
 #include "GoalOrientedBlowUp.h"
-
 GoalOrientedBlowUp::GoalOrientedBlowUp() {
 	id = 2;
 	preConditions[0] = 1; //Agent viu
@@ -19,14 +18,5 @@ GoalOrientedBlowUp::GoalOrientedBlowUp() {
 	postConditions[5] = 0;
 	postConditions[6] = 0;
 	postConditions[7] = 0;
-
-}
-
-void GoalOrientedBlowUp::Update() {
-	agent->worldDictionary[agent->AGENT_ALIVE] = false;
-	agent->worldDictionary[agent->AGENT_HASBOMB] = false;
-	agent->worldDictionary[agent->ENEMY_ALIVE] = false;
-	agent->worldDictionary[agent->ENEMY_INSIGHT] = false;
-	agent->worldDictionary[agent->ENEMY_NEAR] = false;
-	agent->worldDictionary[agent->ENEMY_ALIGNED] = false;
+	
 }

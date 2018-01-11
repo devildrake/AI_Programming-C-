@@ -8,67 +8,14 @@ class GoalOrientedAction {
 private:
 public:
 	int cost;
-	GoalOrientedAgent* agent;
 	int preConditions[8];
 	int postConditions[8];
 	int id;
-	virtual void Update()=0;
 
-	bool CheckConditions(int data[],int size) {
-		bool temp = true;
-		for (int i = 0; i < size; i++) {
-			if (preConditions[0] != 2) {
-				if (!(data[0] == preConditions[0])) {
-					temp = false;
-				}
-			}
-		}
-		return temp;
+	void Update(GoalOrientedAgent* agent) {
+
+		agent->SetWorldStateConditions(postConditions);
+
 	}
 
-
-	bool CheckConditions(std::map<GoalOrientedAgent::WorldInfo,bool> a) {
-		bool temp = true;
-		if (preConditions[0] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_ALIVE] == preConditions[0])) {
-				temp = false;
-			}
-		}
-		if (preConditions[1] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_HASWEAPON] == preConditions[1])) {
-				temp = false;
-			}
-		}
-		if (preConditions[2] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_WEAPONLOADED] == preConditions[2])) {
-				temp = false;
-			}
-		}
-		if (preConditions[3] != 2) {
-			if (!(a[GoalOrientedAgent::AGENT_HASBOMB] == preConditions[3])) {
-				temp = false;
-			}
-		}
-		if (preConditions[4] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_INSIGHT] == preConditions[4])) {
-				temp = false;
-			}
-		}
-		if (preConditions[5] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_ALIGNED] == preConditions[5])) {
-				temp = false;
-			}
-		}
-		if (preConditions[6] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_NEAR] == preConditions[6])) {
-				temp = false;
-			}
-		}
-		if (preConditions[7] != 2) {
-			if (!(a[GoalOrientedAgent::ENEMY_ALIVE] == preConditions[7])) {
-				temp = false;
-			}
-		}
-		return temp;
-	}
 };

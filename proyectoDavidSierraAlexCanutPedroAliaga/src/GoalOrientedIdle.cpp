@@ -22,7 +22,7 @@ GoalOrientedIdle::GoalOrientedIdle() {
 	postConditions[5] = rand() % 2;
 	postConditions[6] = rand() % 2;
 	postConditions[7] = rand() % 2;
-	agent->currentAction = this;
+	/*agent->currentAction = this;
 
 	agent->worldDictionary[agent->AGENT_ALIVE] = postConditions[0];
 	agent->worldDictionary[agent->AGENT_HASWEAPON] = postConditions[1];
@@ -40,9 +40,5 @@ GoalOrientedIdle::GoalOrientedIdle() {
 	agent->goalWorld[agent->ENEMY_INSIGHT] = rand() % 2;
 	agent->goalWorld[agent->ENEMY_ALIGNED] = rand() % 2;
 	agent->goalWorld[agent->ENEMY_NEAR] = rand() % 2;
-	agent->goalWorld[agent->ENEMY_ALIVE] = rand() % 2;
-}
-
-void GoalOrientedIdle::Update() {
-	agent->worldDictionary[agent->ENEMY_ALIGNED] = true;
+	agent->goalWorld[agent->ENEMY_ALIVE] = rand() % 2;*/
 }

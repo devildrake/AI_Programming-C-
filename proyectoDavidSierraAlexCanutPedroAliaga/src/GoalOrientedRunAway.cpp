@@ -20,7 +20,3 @@ GoalOrientedRunAway::GoalOrientedRunAway() {
 	postConditions[6] = 0;
 	postConditions[7] = 2;
 }
-
-void GoalOrientedRunAway::Update() {
-	agent->worldDictionary[agent->ENEMY_INSIGHT] = false;
-}

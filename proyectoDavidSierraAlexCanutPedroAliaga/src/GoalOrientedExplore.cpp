@@ -23,7 +23,3 @@ GoalOrientedExplore::GoalOrientedExplore() {
 	postConditions[7] = 1;
 
 }
-
-void GoalOrientedExplore::Update() {
-	agent->worldDictionary[agent->ENEMY_INSIGHT] = true;
-}

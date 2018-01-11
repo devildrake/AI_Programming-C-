@@ -3,6 +3,5 @@
 
 class GoalOrientedAim: public GoalOrientedAction {
 public:
-	virtual void Update();
 	GoalOrientedAim();
 };

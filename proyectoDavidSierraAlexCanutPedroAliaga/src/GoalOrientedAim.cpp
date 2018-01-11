@@ -21,7 +21,3 @@ GoalOrientedAim::GoalOrientedAim() {
 	postConditions[6] = 1;
 	postConditions[7] = 1;
 }
-
-void GoalOrientedAim::Update() {
-	agent->worldDictionary[agent->ENEMY_ALIGNED] = true;
-}

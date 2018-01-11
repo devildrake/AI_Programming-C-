@@ -7,22 +7,23 @@
 #include "GoalOrientedRunAway.h"
 #include "GoalOrientedShoot.h"
 #include "GoalOrientedIdle.h"
+#include "WorldState.h"
 using namespace std;
 GoalOrientedAgent::GoalOrientedAgent(){
+	//currentWorld = WorldState::GenerateRandomState(-1);
+}
 
-
+void GoalOrientedAgent::SetWorldStateConditions(int data[8]) {
+	for (int i = 0; i < 8; i++) {
+		if (data[i] != 2) {
+			currentWorld->conditions[i] = data[i];
+		}
+	}
 }
 
 GoalOrientedAgent::~GoalOrientedAgent(){
 
-
 }
-
-
-void GoalOrientedAgent::ChangeState(int state) {
-
-}
-
 
 void GoalOrientedAgent::update(float dtime, SDL_Event *event)
 {

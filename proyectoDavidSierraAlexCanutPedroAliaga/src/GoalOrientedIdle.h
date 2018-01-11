@@ -3,7 +3,6 @@
 
 class GoalOrientedIdle : public GoalOrientedAction {
 public:
-	virtual void Update();
 	GoalOrientedIdle();
 };
 

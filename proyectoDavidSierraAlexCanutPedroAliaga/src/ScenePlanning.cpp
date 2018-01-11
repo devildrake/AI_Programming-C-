@@ -40,6 +40,13 @@ float ScenePlanning::EuclideanHeuristic(Vector2D current, Vector2D target) {
 
 ScenePlanning::ScenePlanning()
 {
+
+	Data.SetPosition(Vector2D{ 20, 5 });
+	EnergyText.SetPosition(Vector2D{ 350, 5 });
+	ThirstText.SetPosition(Vector2D{ 500, 5 });
+	CoinsText.SetPosition(Vector2D{ 600, 5 });
+	BankCoinsText.SetPosition(Vector2D{ 800, 5 });
+
 	//debugCounter = 0;
 	waitAFrame = false;
 	foundPath = false;
@@ -346,23 +353,25 @@ void ScenePlanning::GoldHeuristic() {
 }
 
 void ScenePlanning::DrawTexts() {
-	Text Data("Data", Vector2D(20, 5), 20);
+	//Text Data("Data", Vector2D(20, 5), 20);
+
 	Data.SetText("Current State: "+ agents[0]->GetCurrentStateName());
 	Data.DrawText(!draw_grid);
 
-	Text EnergyText("Data", Vector2D(400, 5), 16);
+	//Text EnergyText("Data", Vector2D(400, 5), 16);
+
 	EnergyText.SetText("Energy: " + std::to_string(agents[0]->GetEnergy()));
 	EnergyText.DrawText(!draw_grid);
+	//Text ThirstText("Data", Vector2D(500, 5), 16);
 
-	Text ThirstText("Data", Vector2D(500, 5), 16);
 	ThirstText.SetText("Thirst: " + std::to_string(agents[0]->GetThirst()));
 	ThirstText.DrawText(!draw_grid);
+	//Text CoinsText("Coins ", Vector2D(600, 5), 16);
 
-	Text CoinsText("Coins ", Vector2D(600, 5), 16);
+
 	CoinsText.SetText("Gold in pockets: " + std::to_string(agents[0]->GetGoldPieces()));
 	CoinsText.DrawText(!draw_grid);
-
-	Text BankCoinsText("Data", Vector2D(800, 5), 16);
+	//Text BankCoinsText("Data", Vector2D(800, 5), 16);
 	BankCoinsText.SetText("Money in bank: " + std::to_string(agents[0]->GetCoinsInBank()));
 	BankCoinsText.DrawText(!draw_grid);
 
