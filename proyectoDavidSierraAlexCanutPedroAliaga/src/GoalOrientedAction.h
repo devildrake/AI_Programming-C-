@@ -12,7 +12,8 @@ public:
 	int postConditions[8];
 	int id;
 
-	void Update(GoalOrientedAgent* agent) {
+	virtual void Update(GoalOrientedAgent* agent) {
+
 		agent->SetWorldStateConditions(postConditions);
 		agent->SetPlanIndex(agent->GetPlanIndex() + 1);
 

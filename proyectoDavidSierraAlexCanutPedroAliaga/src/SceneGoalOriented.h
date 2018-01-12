@@ -30,8 +30,12 @@ public:
 	std::priority_queue<WorldState*>frontier;
 	std::unordered_map<WorldState*, WorldState*>came_from;
 	std::unordered_map<WorldState*, float>cost_so_far;
+
+	std::unordered_map<std::string, WorldState*>createdWorldState;
+
 	std::vector<GoalOrientedAction*> actionsToComplete;
 	bool foundPlan;
+	bool mustAct;
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();

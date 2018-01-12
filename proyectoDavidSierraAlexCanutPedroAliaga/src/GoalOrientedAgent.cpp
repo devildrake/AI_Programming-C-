@@ -39,7 +39,14 @@ void GoalOrientedAgent::SetWorldStateConditions(int data[8]) {
 }
 
 GoalOrientedAgent::~GoalOrientedAgent(){
-
+	delete aimAction;
+	delete approachAction;
+	delete blowUpAction;
+	delete exploreAction;
+	delete idleAction;
+	delete reloadAction;
+	delete runAwayAction;
+	delete shootAction;
 }
 
 void GoalOrientedAgent::update(float dtime, SDL_Event *event)

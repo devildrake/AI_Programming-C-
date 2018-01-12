@@ -31,7 +31,7 @@ SceneGoalOriented::SceneGoalOriented()
 	//srand((unsigned int)time(NULL));
 	srand(time(NULL));
 
-	GoalOrientedAgent *agent = new GoalOrientedAgent;
+	GoalOrientedAgent *agent = new GoalOrientedAgent();
 
 	//agent->loadSpriteTexture("../res/soldier.png", 4);
 
@@ -39,7 +39,31 @@ SceneGoalOriented::SceneGoalOriented()
 
 	foundPlan = false;
 
-	goalWorld = WorldState::GenerateRandomState();
+	//goalWorld = WorldState::GenerateRandomState();
+
+	int a[8] = { 1, 1, 0, 0, 0, 0, 0, 0};
+	goalWorld = new WorldState(a);
+
+	/*	preConditions[0] = 1; //Agent viu
+	preConditions[1] = 1; //Té arma
+	preConditions[2] = 1; //Arma carregada
+	preConditions[3] = 2; //Té bomba
+	preConditions[4] = 1; //Enemic visible
+	preConditions[5] = 1; //Enemic alineat
+	preConditions[6] = 1; //Enemic a prop
+	preConditions[7] = 1; //Enemic viu*/
+
+	agents[0]->currentWorld->conditions[0] = 1;
+	agents[0]->currentWorld->conditions[1] = 1;
+	agents[0]->currentWorld->conditions[2] = 0;
+	agents[0]->currentWorld->conditions[3] = 0;
+	agents[0]->currentWorld->conditions[4] = 1;
+	agents[0]->currentWorld->conditions[5] = 1;
+	agents[0]->currentWorld->conditions[6] = 1;
+	agents[0]->currentWorld->conditions[7] = 1;
+
+
+
 	std::cout << "World state to go to ";
 	goalWorld->DebugBits();
 	ThinkAStar();
@@ -58,14 +82,21 @@ void SceneGoalOriented::update(float dtime, SDL_Event *event)
 {
 	if (foundPlan) {
 		if (agents[0]->currentWorld != goalWorld) {
-
-			agents[0]->currentWorld->DebugBits();
-			actionsToComplete[agents[0]->GetPlanIndex()]->Update(agents[0]);
-			std::cout << "Action done now: " << std::endl;
-			agents[0]->currentWorld->DebugBits();
-
-			//agents[0]->SetPlanIndex(agents[0]->GetPlanIndex()+1);
-
+			if (agents[0]->GetPlanIndex() < actionsToComplete.size()-1) {
+				if (actionsToComplete[agents[0]->GetPlanIndex()]!=nullptr) {
+					agents[0]->currentWorld->DebugBits();
+					actionsToComplete[agents[0]->GetPlanIndex()]->Update(agents[0]);
+					std::cout << "Action done now: " << std::endl;
+					agents[0]->currentWorld->DebugBits();
+				}
+				else {
+					agents[0]->SetPlanIndex(agents[0]->GetPlanIndex() + 1);
+				}
+				//agents[0]->SetPlanIndex(agents[0]->GetPlanIndex()+1);
+			}
+			else {
+				std::cout << "Plan Finish" << std::endl;
+			}
 		}
 		else {
 			foundPlan = false;
@@ -86,80 +117,112 @@ void SceneGoalOriented::ClearAStar() {
 	}
 
 	for (std::unordered_map<WorldState*, float>::iterator it = cost_so_far.begin(); it != cost_so_far.end(); ++it) {
-		it->second = -1;
+		it->second = 0;
 	}
 }
 
 
 void SceneGoalOriented::ThinkAStar() {
 
+
 	ClearAStar();
 
-	//ES POSIBLE QUE EN ESTAS CUATRO LÏNEAS ALGO PATINE
-	agents[0]->currentWorld->createdBy = agents[0]->idleAction;
 	frontier.push(agents[0]->currentWorld);
-	came_from[agents[0]->currentWorld] = agents[0]->currentWorld;
 	cost_so_far[agents[0]->currentWorld] = 0;
-	
+
 	WorldState* current;
+
+
 
 	std::vector<GoalOrientedAction*> availableActions;
 	availableActions.push_back(agents[0]->aimAction);
 	availableActions.push_back(agents[0]->approachAction);
-	availableActions.push_back(agents[0]->blowUpAction);
+	//availableActions.push_back(agents[0]->blowUpAction);
 	availableActions.push_back(agents[0]->exploreAction);
 	availableActions.push_back(agents[0]->reloadAction);
 	availableActions.push_back(agents[0]->runAwayAction);
 	availableActions.push_back(agents[0]->shootAction);
 
-	//LAS DOS LINEAS BAOJ ESTO NO LAS TENGO CLARAS
-	current = agents[0]->currentWorld;
-	came_from[current] = agents[0]->currentWorld;
-
 	while (!frontier.empty()) {
 		current = frontier.top();
 
 		if (WorldState::Equals(*current, *goalWorld)) {
+
+			came_from[goalWorld] = came_from[current];
+
 			goalWorld->createdBy = current->createdBy;
+
 			break;
 		}
 
-		std::vector<WorldState>neighbours;
+		std::vector<WorldState*>neighbours;
 
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < availableActions.size(); i++) {
 			if (WorldState::isDoable(*current, availableActions[i])) {
-				neighbours.push_back(WorldState(availableActions[i]->preConditions, availableActions[i]));
+				if (createdWorldState[WorldState::GetBits(WorldState::ApplyPostConditions(current->conditions, availableActions[i]->postConditions)->conditions, 8)] != nullptr) {
+					std::cout << "Exists" << std::endl;
+				}
+				else {
+					WorldState* temp = new WorldState(WorldState::ApplyPostConditions(current->conditions, availableActions[i]->postConditions)->conditions, availableActions[i]);
+					neighbours.push_back(temp);
+					createdWorldState[WorldState::GetBits(temp->conditions, 8)] = temp;
 
-			}
-		}
-
-		for (int i = 0; i < neighbours.size(); i++) {
-			int newCost = cost_so_far[current] + neighbours[i].createdBy->cost + ActionHeuristic(current, &neighbours[i]);
-			if (cost_so_far[&neighbours[i]] == -1 || newCost < cost_so_far[&neighbours[i]]) {
-				std::cout << "Add" << std::endl;
-				cost_so_far[&neighbours[i]] = newCost;
-				neighbours[i].acumulatedCost = newCost;
-				frontier.push(&neighbours[i]);
-				came_from[&neighbours[i]] = current;
+				}
 			}
 		}
 		frontier.pop();
+
+		for (int i = 0; i < neighbours.size(); i++) {
+			int newCost = cost_so_far[current] + neighbours[i]->createdBy->cost + ActionHeuristic(current, neighbours[i]);
+			if (cost_so_far[neighbours[i]] == 0 || newCost < cost_so_far[neighbours[i]]) {
+				//std::cout << "Add" << std::endl;
+				cost_so_far[neighbours[i]] = newCost;
+				neighbours[i]->acumulatedCost = newCost;
+				frontier.push(neighbours[i]);
+				came_from[neighbours[i]] = current;
+			}
+		}
+		//frontier.pop();
 	}
 
-	goalWorld->createdBy = current->createdBy;
+	//goalWorld->createdBy = current->createdBy;
 
-	current = goalWorld;
-
-	actionsToComplete.push_back(current->createdBy);
-
-
-	while (!WorldState::Equals(*current, *agents[0]->currentWorld)) {
-		//AQUI PEGA UNA NULLREFERENCE DEL CARAJO
-		current = came_from[current];
-		actionsToComplete.insert(actionsToComplete.begin(), current->createdBy);
+	if (createdWorldState[WorldState::GetBits(goalWorld->conditions, 8)] != nullptr) {
+		goalWorld = createdWorldState[WorldState::GetBits(goalWorld->conditions, 8)];
+		mustAct = true;
 	}
-	foundPlan = true;
+	else {
+		mustAct = false;
+	}
+	if (mustAct) {
 
+		came_from[goalWorld] = came_from[current];
+		current = goalWorld;
+
+		actionsToComplete.push_back(current->createdBy);
+
+
+		while (!WorldState::Equals(*current, *agents[0]->currentWorld)) {
+			//AQUI PEGA UNA NULLREFERENCE DEL CARAJO
+			if (came_from[current] != nullptr&&current->createdBy!=nullptr) {
+				current = came_from[current];
+				actionsToComplete.insert(actionsToComplete.begin(), current->createdBy);
+			}
+			else {
+				std::cout << "Break" << endl;
+				break;
+			}
+		}
+		foundPlan = true;
+
+		//TODO DELETE PUNTEROSCOÑ
+
+	}
+	else {
+		std::cout << "Plan not found" << std::endl;
+		agents[0]->shootAction->Update(agents[0]);
+
+	}
 }
 
 void SceneGoalOriented::DrawTexts() {
