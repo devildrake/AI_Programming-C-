@@ -25,6 +25,7 @@ GoalOrientedIdle::GoalOrientedIdle() {
 
 
 
+	name = "Idle";
 
 
 	//postConditions[0] = 1;

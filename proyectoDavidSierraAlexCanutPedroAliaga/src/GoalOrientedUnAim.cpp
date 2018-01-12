@@ -1,11 +1,10 @@
-#include "GoalOrientedShoot.h"
+#include "GoalOrientedUnAim.h"
 
-GoalOrientedShoot::GoalOrientedShoot() {
-	//0 es false, 1 es true, 2 es doesn't matter
-	id = 7;
+GoalOrientedUnAim::GoalOrientedUnAim() {
+	id = 1;
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 1; //Té arma
-	preConditions[2] = 1; //Arma carregada
+	preConditions[2] = 2; //Arma carregada
 	preConditions[3] = 2; //Té bomba
 	preConditions[4] = 1; //Enemic visible
 	preConditions[5] = 1; //Enemic alineat
@@ -14,13 +13,13 @@ GoalOrientedShoot::GoalOrientedShoot() {
 
 	postConditions[0] = 1;
 	postConditions[1] = 1;
-	postConditions[2] = 0;
+	postConditions[2] = 2;
 	postConditions[3] = 2;
-	postConditions[4] = 0;
+	postConditions[4] = 2;
 	postConditions[5] = 0;
-	postConditions[6] = 0;
-	postConditions[7] = 0;
+	postConditions[6] = 2;
+	postConditions[7] = 2;
 	cost = 2;
-	name = "Shoot";
+	name = "UnAim";
 
 }

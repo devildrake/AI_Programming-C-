@@ -7,6 +7,11 @@
 #include "GoalOrientedRunAway.h"
 #include "GoalOrientedShoot.h"
 #include "GoalOrientedIdle.h"
+#include "GoalOrientedPickUpWeapon.h"
+#include "GoalOrientedThrowWeapon.h"
+#include "GoalOrientedUnAim.h"
+#include "GoalOrientedUnLoad.h"
+#include "GoalOrientedPickUpBomb.h"
 #include "WorldState.h"
 using namespace std;
 GoalOrientedAgent::GoalOrientedAgent(){
@@ -19,6 +24,11 @@ GoalOrientedAgent::GoalOrientedAgent(){
 	runAwayAction = new GoalOrientedRunAway();
 	shootAction = new GoalOrientedShoot();
 	idleAction = new GoalOrientedIdle();
+	pickUpWeaponAction = new GoalOrientedPickUpWeapon();
+	throwWeaponAction = new GoalOrientedThrowWeapon();
+	unLoadWeaponAction = new GoalOrientedUnLoad();
+	unAimAction = new GoalOrientedUnAim();
+	pickUpBombAction = new GoalOrientedPickUpBomb();
 	currentWorld = WorldState::GenerateRandomState();
 	currentWorld->conditions[0] = 1;
 }
@@ -47,6 +57,53 @@ GoalOrientedAgent::~GoalOrientedAgent(){
 	delete reloadAction;
 	delete runAwayAction;
 	delete shootAction;
+	delete throwWeaponAction;
+	delete pickUpWeaponAction;
+	delete unAimAction;
+	delete unLoadWeaponAction;
+	delete pickUpBombAction;
+}
+
+void GoalOrientedAgent::ResetWorldView() {
+	currentWorld->conditions[0] = 1;
+	currentWorld->conditions[1] = rand() % 2;
+	currentWorld->conditions[2] = rand() % 2;
+	currentWorld->conditions[3] = 0;
+	currentWorld->conditions[4] = rand() % 2;
+	currentWorld->conditions[5] = rand() % 2;
+	currentWorld->conditions[6] = rand() % 2;
+	currentWorld->conditions[7] = 1;
+
+	if (!currentWorld->conditions[1]) {
+		currentWorld->conditions[2] = false; //Arma carregada
+		currentWorld->conditions[5] = false; //Enemic alineat
+	}
+
+	if (!currentWorld->conditions[6]) {
+		currentWorld->conditions[4] = false;
+	}
+	else {
+		currentWorld->conditions[4] = true;
+	}
+
+
+
+	if (!currentWorld->conditions[4]) {
+		currentWorld->conditions[5] = false;
+	}
+
+	
+	/*	preConditions[0] = 1; //Agent viu
+	preConditions[1] = 2; //Té arma
+	preConditions[2] = 2; //Arma carregada
+	preConditions[3] = 2; //Té bomba
+	preConditions[4] = 0; //Enemic visible
+	preConditions[5] = 2; //Enemic alineat
+	preConditions[6] = 2; //Enemic a prop
+	preConditions[7] = 1; //Enemic viu*/
+
+
+
 }
 
 void GoalOrientedAgent::update(float dtime, SDL_Event *event)

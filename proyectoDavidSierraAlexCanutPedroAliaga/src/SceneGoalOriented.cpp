@@ -26,6 +26,27 @@ int SceneGoalOriented::ActionHeuristic(WorldState* lhs, WorldState* rhs) {
 
 SceneGoalOriented::SceneGoalOriented()
 {
+
+	for (int i = 0; i < 15; i++) {
+		actionTexts[i].SetText(" ");
+	}
+
+	PlayerAlive.SetPosition(Vector2D{0,100});
+	HasWeapon.SetPosition(Vector2D{ 0,150 });
+	WeaponLoaded.SetPosition(Vector2D{ 0,200 });
+	HasBomb.SetPosition(Vector2D{ 0,250 });
+	EnemyInSight.SetPosition(Vector2D{ 0,300 });
+	EnemyAligned.SetPosition(Vector2D{ 0,350 });
+	EnemyNearby.SetPosition(Vector2D{ 0,400 });
+	EnemyAlive.SetPosition(Vector2D{ 0,450 });
+
+
+
+
+
+
+	system("cls");
+
 	loadTextures("../res/maze.png", "../res/coin.png");
 
 	//srand((unsigned int)time(NULL));
@@ -39,10 +60,10 @@ SceneGoalOriented::SceneGoalOriented()
 
 	foundPlan = false;
 
-	//goalWorld = WorldState::GenerateRandomState();
+	goalWorld = WorldState::GenerateRandomState();
 
-	int a[8] = { 1, 1, 0, 0, 0, 0, 0, 0};
-	goalWorld = new WorldState(a);
+	//int a[8] = { 1, 0, 1, 0, 0, 0, 0, 0};
+	//goalWorld = new WorldState(a);
 
 	/*	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 1; //Té arma
@@ -53,16 +74,18 @@ SceneGoalOriented::SceneGoalOriented()
 	preConditions[6] = 1; //Enemic a prop
 	preConditions[7] = 1; //Enemic viu*/
 
-	agents[0]->currentWorld->conditions[0] = 1;
-	agents[0]->currentWorld->conditions[1] = 1;
-	agents[0]->currentWorld->conditions[2] = 0;
-	agents[0]->currentWorld->conditions[3] = 0;
-	agents[0]->currentWorld->conditions[4] = 1;
-	agents[0]->currentWorld->conditions[5] = 1;
-	agents[0]->currentWorld->conditions[6] = 1;
-	agents[0]->currentWorld->conditions[7] = 1;
+	//agents[0]->currentWorld->conditions[0] = 1;
+	//agents[0]->currentWorld->conditions[1] = rand() % 2;
+	//agents[0]->currentWorld->conditions[2] = rand() % 2;
+	//agents[0]->currentWorld->conditions[3] = 0;
+	//agents[0]->currentWorld->conditions[4] = rand() % 2;
+	//agents[0]->currentWorld->conditions[5] = rand() % 2;
+	//agents[0]->currentWorld->conditions[6] = rand()%2;
+	//agents[0]->currentWorld->conditions[7] = 1;
 
+	agents[0]->ResetWorldView();
 
+	startingWorld = new WorldState(agents[0]->currentWorld->conditions);
 
 	std::cout << "World state to go to ";
 	goalWorld->DebugBits();
@@ -78,24 +101,65 @@ SceneGoalOriented::~SceneGoalOriented()
 	}
 }
 
+void SceneGoalOriented::Reset() {
+	delete goalWorld;
+	goalWorld = WorldState::GenerateRandomState();
+
+	agents[0]->ResetWorldView();
+
+	startingWorld = new WorldState(agents[0]->currentWorld->conditions);
+	ThinkAStar();
+	mustDebug = false;
+
+}
+
 void SceneGoalOriented::update(float dtime, SDL_Event *event)
 {
-	if (foundPlan) {
+	switch (event->type) {
+	case SDL_KEYDOWN:
+		if (event->key.keysym.scancode == SDL_SCANCODE_SPACE)
+			Reset();
+			break;
+	default:
+		break;
+	}
+
+
+	if (foundPlan&&!mustDebug) {
+		//CAMBIADO AQUI
+
+		for (int i = 0; i < 15; i++) {
+			actionTexts[i].SetText(" ");
+		}
+
+		//agents[0]->SetPlanIndex(0);
 		if (agents[0]->currentWorld != goalWorld) {
-			if (agents[0]->GetPlanIndex() < actionsToComplete.size()-1) {
-				if (actionsToComplete[agents[0]->GetPlanIndex()]!=nullptr) {
-					agents[0]->currentWorld->DebugBits();
-					actionsToComplete[agents[0]->GetPlanIndex()]->Update(agents[0]);
-					std::cout << "Action done now: " << std::endl;
-					agents[0]->currentWorld->DebugBits();
+
+
+			for (int i = 0; i < actionsToComplete.size(); i++) {
+				if (actionsToComplete[i] != nullptr) {
+					actionTexts[i].SetText(actionsToComplete[i]->name);
+					actionTexts[i].SetPosition(Vector2D{ 900,50.0f+40.0f*i });
 				}
+			}
+
+
+			if (agents[0]->GetPlanIndex() < actionsToComplete.size()) {
+				if (actionsToComplete[agents[0]->GetPlanIndex()]!=nullptr) {
+					actionsToComplete[agents[0]->GetPlanIndex()]->Update(agents[0]);
+				}
+				//SI ES UNA ACTIVIDAD NULA SE AUMENTA EL INDEX
 				else {
 					agents[0]->SetPlanIndex(agents[0]->GetPlanIndex() + 1);
 				}
 				//agents[0]->SetPlanIndex(agents[0]->GetPlanIndex()+1);
 			}
 			else {
-				std::cout << "Plan Finish" << std::endl;
+				if (!mustDebug) {
+					actionsToComplete.clear();
+					std::cout << "Plan Finish" << std::endl;
+					mustDebug = true;
+				}
 			}
 		}
 		else {
@@ -113,6 +177,10 @@ void SceneGoalOriented::ClearAStar() {
 	}
 
 	for (std::unordered_map<WorldState*, WorldState*>::iterator it = came_from.begin(); it != came_from.end(); ++it) {
+		it->second = nullptr;
+	}
+
+	for (std::unordered_map<std::string, WorldState*>::iterator it = createdWorldState.begin(); it != createdWorldState.end(); ++it) {
 		it->second = nullptr;
 	}
 
@@ -137,11 +205,17 @@ void SceneGoalOriented::ThinkAStar() {
 	std::vector<GoalOrientedAction*> availableActions;
 	availableActions.push_back(agents[0]->aimAction);
 	availableActions.push_back(agents[0]->approachAction);
-	//availableActions.push_back(agents[0]->blowUpAction);
+	availableActions.push_back(agents[0]->blowUpAction);
 	availableActions.push_back(agents[0]->exploreAction);
 	availableActions.push_back(agents[0]->reloadAction);
 	availableActions.push_back(agents[0]->runAwayAction);
 	availableActions.push_back(agents[0]->shootAction);
+	availableActions.push_back(agents[0]->throwWeaponAction);
+	availableActions.push_back(agents[0]->pickUpWeaponAction);
+	availableActions.push_back(agents[0]->unAimAction);
+	availableActions.push_back(agents[0]->unLoadWeaponAction);
+	availableActions.push_back(agents[0]->pickUpBombAction);
+
 
 	while (!frontier.empty()) {
 		current = frontier.top();
@@ -160,7 +234,9 @@ void SceneGoalOriented::ThinkAStar() {
 		for (int i = 0; i < availableActions.size(); i++) {
 			if (WorldState::isDoable(*current, availableActions[i])) {
 				if (createdWorldState[WorldState::GetBits(WorldState::ApplyPostConditions(current->conditions, availableActions[i]->postConditions)->conditions, 8)] != nullptr) {
-					std::cout << "Exists" << std::endl;
+					//std::cout << "That world state already existed" << std::endl;
+					neighbours.push_back(createdWorldState[WorldState::GetBits(WorldState::ApplyPostConditions(current->conditions, availableActions[i]->postConditions)->conditions, 8)]);
+
 				}
 				else {
 					WorldState* temp = new WorldState(WorldState::ApplyPostConditions(current->conditions, availableActions[i]->postConditions)->conditions, availableActions[i]);
@@ -173,7 +249,7 @@ void SceneGoalOriented::ThinkAStar() {
 		frontier.pop();
 
 		for (int i = 0; i < neighbours.size(); i++) {
-			int newCost = cost_so_far[current] + neighbours[i]->createdBy->cost + ActionHeuristic(current, neighbours[i]);
+			int newCost = cost_so_far[current] + neighbours[i]->createdBy->cost + ActionHeuristic(goalWorld, neighbours[i]);
 			if (cost_so_far[neighbours[i]] == 0 || newCost < cost_so_far[neighbours[i]]) {
 				//std::cout << "Add" << std::endl;
 				cost_so_far[neighbours[i]] = newCost;
@@ -189,6 +265,7 @@ void SceneGoalOriented::ThinkAStar() {
 
 	if (createdWorldState[WorldState::GetBits(goalWorld->conditions, 8)] != nullptr) {
 		goalWorld = createdWorldState[WorldState::GetBits(goalWorld->conditions, 8)];
+		goalWorld->createdBy = createdWorldState[WorldState::GetBits(goalWorld->conditions, 8)]->createdBy;
 		mustAct = true;
 	}
 	else {
@@ -220,14 +297,47 @@ void SceneGoalOriented::ThinkAStar() {
 	}
 	else {
 		std::cout << "Plan not found" << std::endl;
-		agents[0]->shootAction->Update(agents[0]);
+		//agents[0]->shootAction->Update(agents[0]);
 
 	}
+
+	//CLEAR DEL VECTOR DE PUNTEROS
+
+	//for (std::vector<GoalOrientedAction*>::iterator it = availableActions.begin(); it != availableActions.end(); ++it) {
+	//	delete (*it);
+	//}
+	//availableActions.clear();
+
+}
+
+inline std::string  BoolToString(bool b)
+{
+	return b ? "true" : "false";
 }
 
 void SceneGoalOriented::DrawTexts() {
-	Data.SetText("I'm Alive");
-	Data.DrawText();
+	WorldData.SetText("Starting World                                                       Goal World                                                       Actions Completed");
+	WorldData.DrawText();
+	PlayerAlive.SetText("Player Alive:  " + BoolToString(startingWorld->conditions[0]) + "                                                   Player Alive:  " + BoolToString(goalWorld->conditions[0]));
+	PlayerAlive.DrawText();
+	HasWeapon.SetText("Has Weapon:  " + BoolToString(startingWorld->conditions[1]) + "                                                  Has Weapon:  " + BoolToString(goalWorld->conditions[1]));
+	HasWeapon.DrawText();
+	WeaponLoaded.SetText("Weapon Loaded:  " + BoolToString(startingWorld->conditions[2]) + "                                            Weapon Loaded:  " + BoolToString(goalWorld->conditions[2]));
+	WeaponLoaded.DrawText();
+	HasBomb.SetText("Has Bomb:  " + BoolToString(startingWorld->conditions[3]) + "                                                     Has Bomb:  " + BoolToString(goalWorld->conditions[3]));
+	HasBomb.DrawText();
+	EnemyInSight.SetText("Enemy In Sight:  " + BoolToString(startingWorld->conditions[4]) + "                                               Enemy In Sight:  " + BoolToString(goalWorld->conditions[4]));
+	EnemyInSight.DrawText();
+	EnemyAligned.SetText("Enemy Aligned:  " + BoolToString(startingWorld->conditions[5]) + "                                               Enemy Aligned:  " + BoolToString(goalWorld->conditions[5]));
+	EnemyAligned.DrawText();
+	EnemyNearby.SetText("Enemy Nearby:  " + BoolToString(startingWorld->conditions[6]) + "                                               Enemy Nearby:  " + BoolToString(goalWorld->conditions[6]));
+	EnemyNearby.DrawText();
+	EnemyAlive.SetText("Enemy Alive:  " + BoolToString(startingWorld->conditions[7]) + "                                                   Enemy Alive:  " + BoolToString(goalWorld->conditions[7]));
+	EnemyAlive.DrawText();
+
+	for (int i = 0; i < 15; i++) {
+		actionTexts[i].DrawText();
+	}
 }
 
 void SceneGoalOriented::draw()

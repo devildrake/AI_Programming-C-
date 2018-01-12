@@ -4,7 +4,7 @@ GoalOrientedBlowUp::GoalOrientedBlowUp() {
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 2; //Té arma
 	preConditions[2] = 2; //Arma carregada
-	preConditions[3] = 2; //Té bomba
+	preConditions[3] = 1; //Té bomba
 	preConditions[4] = 1; //Enemic visible
 	preConditions[5] = 2; //Enemic alineat
 	preConditions[6] = 1; //Enemic a prop
@@ -19,4 +19,6 @@ GoalOrientedBlowUp::GoalOrientedBlowUp() {
 	postConditions[6] = 0;
 	postConditions[7] = 0;
 	cost = 5;
+	name = "Blow Up";
+
 }

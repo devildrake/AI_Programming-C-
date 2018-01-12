@@ -5,7 +5,7 @@ GoalOrientedAim::GoalOrientedAim() {
 	id = 0;
 	preConditions[0] = 1; //Agent viu
 	preConditions[1] = 1; //Té arma
-	preConditions[2] = 1; //Arma carregada
+	preConditions[2] = 2; //Arma carregada
 	preConditions[3] = 2; //Té bomba
 	preConditions[4] = 1; //Enemic visible
 	preConditions[5] = 0; //Enemic alineat
@@ -14,11 +14,13 @@ GoalOrientedAim::GoalOrientedAim() {
 
 	postConditions[0] = 1;
 	postConditions[1] = 1;
-	postConditions[2] = 1;
+	postConditions[2] = 2;
 	postConditions[3] = 2;
 	postConditions[4] = 1;
 	postConditions[5] = 1;
 	postConditions[6] = 1;
 	postConditions[7] = 1;
 	cost = 1;
+	name = "Aim";
+
 }

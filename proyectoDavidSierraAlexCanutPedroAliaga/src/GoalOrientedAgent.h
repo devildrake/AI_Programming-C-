@@ -24,7 +24,12 @@ public:
 	GoalOrientedAction* runAwayAction;
 	GoalOrientedAction* shootAction;
 	GoalOrientedAction* idleAction;
-
+	GoalOrientedAction* throwWeaponAction;
+	GoalOrientedAction* pickUpWeaponAction;
+	GoalOrientedAction* unLoadWeaponAction;
+	GoalOrientedAction* unAimAction;
+	GoalOrientedAction* pickUpBombAction;
+	void ResetWorldView();
 	GoalOrientedAgent();
 	~GoalOrientedAgent();
 	void update(float dtime, SDL_Event *event);

@@ -80,12 +80,54 @@ bool WorldState::Equals(WorldState lhs, WorldState rhs) {
 	return temp;
 }
 
+/*	preConditions[0] = 1; //Agent viu
+	preConditions[1] = 1;//Té arma
+	preConditions[2] = 2; //Arma carregada
+	preConditions[3] = 2; //Té bomba
+	preConditions[4] = 2; //Enemic visible
+	preConditions[5] = 2; //Enemic alineat
+	preConditions[6] = 2; //Enemic a prop
+	preConditions[7] = 2; //Enemic viu*/
+
 WorldState* WorldState::GenerateRandomState(){
 	int tempData[8];
-	for (int i = 0; i < 8; i++) {
+	for (int i = 1; i < 8; i++) {
 		tempData[i] = rand() % 2;
 	}
 	tempData[0] = true;
+
+	if (rand() % 100 < 10) {
+		tempData[0] = false;
+	}
+
+	tempData[3] = false;
+	if (tempData[7] == false) {
+		tempData[6] = false;
+		tempData[5] = false;
+		tempData[4] = false;
+	}
+
+	if (tempData[1] == false) {
+		tempData[2] = false;
+	}
+
+	if (tempData[4] == false) {
+		tempData[6] = false;
+		tempData[5] = false;
+	}
+
+
+	if (tempData[6] == false) {
+		tempData[5] = false;
+	}
+
+	if (tempData[0]==false) {
+		for (int i = 1; i < 8; i++) {
+			tempData[i] = false;
+		}
+	}
+
+
 	WorldState* temp = new WorldState(tempData);
 
 return temp;

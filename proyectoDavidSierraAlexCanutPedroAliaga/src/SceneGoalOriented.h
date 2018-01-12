@@ -36,6 +36,7 @@ public:
 	std::vector<GoalOrientedAction*> actionsToComplete;
 	bool foundPlan;
 	bool mustAct;
+	bool mustDebug;
 	void update(float dtime, SDL_Event *event);
 	void draw();
 	const char* getTitle();
@@ -43,8 +44,20 @@ public:
 	std::vector<GoalOrientedAgent*> agents;
 
 private:
-	Text Data;
+	Text WorldData;
+	Text PlayerAlive;
+	Text HasWeapon;
+	Text WeaponLoaded;
+	Text HasBomb;
+	Text EnemyInSight;
+	Text EnemyAligned;
+	Text EnemyNearby;
+	Text EnemyAlive;
+	void Reset();
+	Text actionTexts[15];
+
 	SDL_Texture *background_texture;
 	bool loadTextures(char* filename_bg, char* filename_coin);
 	WorldState* goalWorld;
+	WorldState* startingWorld;
 };

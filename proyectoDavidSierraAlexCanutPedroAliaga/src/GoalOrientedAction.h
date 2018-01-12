@@ -11,11 +11,13 @@ public:
 	int preConditions[8];
 	int postConditions[8];
 	int id;
+	std::string name;
 
 	virtual void Update(GoalOrientedAgent* agent) {
 
 		agent->SetWorldStateConditions(postConditions);
 		agent->SetPlanIndex(agent->GetPlanIndex() + 1);
+		std::cout << "Doing Activity named: " + name << std::endl;
 
 	}
 

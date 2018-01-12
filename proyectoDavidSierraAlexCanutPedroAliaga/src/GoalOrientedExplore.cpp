@@ -22,4 +22,6 @@ GoalOrientedExplore::GoalOrientedExplore() {
 	postConditions[6] = 2;
 	postConditions[7] = 1;
 	cost = 2;
+	name = "Explore";
+
 }
